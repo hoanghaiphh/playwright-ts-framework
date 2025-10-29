@@ -25,7 +25,7 @@ export default defineConfig({
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    baseURL: process.env.BASE_URL || 'https://demo.nopcommerce.com/',
+    baseURL: process.env.BASE_URL || 'http://localhost:8086/',
     headless: false,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -66,12 +66,12 @@ export default defineConfig({
     },
 
     {
-      name: 'microsoft-edge',
+      name: 'edge',
       use: { ...devices['Desktop Edge'], channel: 'msedge' },
     },
 
     {
-      name: 'google-chrome',
+      name: 'chrome',
       use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     },
   ],

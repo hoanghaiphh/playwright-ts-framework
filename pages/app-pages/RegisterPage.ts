@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test'
-import { UserInfo } from '@utils/userInfo.builder';
+import { UserInfo } from '@utils/data-models/UserInfo.model';
 
 export class RegisterPage {
 

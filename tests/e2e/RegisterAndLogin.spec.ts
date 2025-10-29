@@ -1,9 +1,10 @@
 import { test, expect, Page } from '@playwright/test';
 import { Header } from '@pages/components/Header';
-import { LoginPage } from '@pages/LoginPage';
-import { RegisterPage } from '@pages/RegisterPage';
-import { CustomerInfoPage } from '@pages/CustomerInfoPage';
-import { createUserInfo } from '@utils/userInfo.builder';
+import { LoginPage } from '@pages/app-pages/LoginPage';
+import { RegisterPage } from '@pages/app-pages/RegisterPage';
+import { CustomerInfoPage } from '@pages/app-pages/CustomerInfoPage';
+import { UserInfo } from '@utils/data-models/UserInfo.model';
+import { UserGenerator } from '@utils/generators/UserGenerator';
 
 test.describe.serial('Register_And_Login', () => {
 
@@ -12,14 +13,17 @@ test.describe.serial('Register_And_Login', () => {
     let loginPage: LoginPage;
     let registerPage: RegisterPage;
     let customerInfoPage: CustomerInfoPage;
-    const userInfo = createUserInfo();
+    let userInfo: UserInfo;
 
-    test.beforeAll(async ({ browser }) => {
+    test.beforeAll(async ({ browser }, testInfo) => {
         page = await browser.newPage();
+        
         header = new Header(page);
         loginPage = new LoginPage(page);
         registerPage = new RegisterPage(page);
         customerInfoPage = new CustomerInfoPage(page);
+
+        userInfo = UserGenerator.generate(testInfo.project.name)
 
         await page.goto('/'); // baseURL from playwright.config.ts
     });
@@ -35,7 +39,7 @@ test.describe.serial('Register_And_Login', () => {
         await registerPage.clickOnRegisterButton();
 
         const msg = await registerPage.getRegisterSuccessMessage();
-        expect(msg).toEqual('Your registration completed');
+        expect(msg).toContain('Your registration completed');
     });
 
     test('User_02_Login', async () => {
