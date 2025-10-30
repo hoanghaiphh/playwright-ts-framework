@@ -1,10 +1,10 @@
-import { UserInfo } from '@utils/models/UserInfo.model';
-import { NestedUserJson, UserListJson, FlatUserJson } from '@utils/interfaces/UserInfo.interface';
+import { UserInfo } from '@utils/data-contracts/UserInfo.model';
+import { NestedJson, FlatJson } from '@utils/data-contracts/UserInfo.interface';
 import { createUniqueEmail } from '@utils/helpers/common';
 
 export class UserMappers {
 
-    public static mapNestedUserJson(userJson: NestedUserJson): UserInfo {
+    public static mapNestedJson(userJson: NestedJson): UserInfo {
         const userInfo = new UserInfo();
 
         userInfo.setFirstName(userJson.name.firstName);
@@ -16,7 +16,7 @@ export class UserMappers {
         return userInfo;
     }
 
-    public static mapFlatUserJson(userJson: FlatUserJson, browserName: string): UserInfo {
+    public static mapFlatJson(userJson: FlatJson, browserName: string): UserInfo {
         const userInfo = new UserInfo();
 
         userInfo.setFirstName(userJson.firstName);

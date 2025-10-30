@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test';
-import { UserInfo } from '@utils/models/UserInfo.model';
+import { UserInfo } from '@utils/data-contracts/UserInfo.model';
 
 export class LoginPage {
 

@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { UserInfo } from '@utils/models/UserInfo.model';
-import { UserFactory } from '@utils/generators/UserFactory';
+import { UserInfo } from '@utils/data-contracts/UserInfo.model';
+import { UserFactory } from '@utils/data-builders/UserFactory';
 
-test.describe.serial('JSON_Reader_Testing', () => {
+test.describe.serial('Data_Reader_Testing', () => {
 
     let page: Page;
     let userInfo: UserInfo;
@@ -50,6 +50,10 @@ test.describe.serial('JSON_Reader_Testing', () => {
             console.log(`Password: ${user.password}`)
             console.log(`Company: ${user.company}\n`)
         });
+    });
+
+    test('Excel', async () => {
+
     });
 
 })

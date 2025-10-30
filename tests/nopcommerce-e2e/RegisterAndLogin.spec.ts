@@ -1,10 +1,10 @@
 import { test, expect, Page } from '@playwright/test';
-import { Header } from '@pages/components/Header';
-import { LoginPage } from '@pages/app-pages/LoginPage';
-import { RegisterPage } from '@pages/app-pages/RegisterPage';
-import { CustomerInfoPage } from '@pages/app-pages/CustomerInfoPage';
-import { UserInfo } from '@utils/models/UserInfo.model';
-import { UserGenerator } from '@utils/generators/UserGenerator';
+import { Header } from '@pages/nopcommerce-components/Header';
+import { LoginPage } from '@pages/nopcommerce-pages/LoginPage';
+import { RegisterPage } from '@pages/nopcommerce-pages/RegisterPage';
+import { CustomerInfoPage } from '@pages/nopcommerce-pages/CustomerInfoPage';
+import { UserInfo } from '@utils/data-contracts/UserInfo.model';
+import { UserGenerator } from '@utils/data-builders/UserGenerator';
 
 test.describe.serial('Register_And_Login', () => {
 

@@ -11,7 +11,7 @@ export class JsonDataService {
             return JSON.parse(fileContents) as T;
 
         } catch (error) {
-            console.error(`ERROR: Failed to load data from ${filePath}`);
+            console.error(`ERROR: Failed to load data from ${filePath}`, error);
             return undefined;
         }
     }
@@ -24,7 +24,7 @@ export class JsonDataService {
             return JSON.parse(fileContents) as T[];
 
         } catch (error) {
-            console.error(`ERROR: Failed to load data from ${filePath}`);
+            console.error(`ERROR: Failed to load data from ${filePath}`, error);
             return [];
         }
     }
