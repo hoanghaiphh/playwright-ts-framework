@@ -1,4 +1,4 @@
-export interface NestedJson {
+export interface Json1 {
     name: {
         firstName: string;
         lastName: string;
@@ -12,11 +12,11 @@ export interface NestedJson {
     buildTools: string[];
 }
 
-export interface FlatInNestedJson {
-    users: FlatJson[];
+export interface Json2 {
+    users: Json3[];
 }
 
-export interface FlatJson {
+export interface Json3 {
     firstName: string;
     lastName: string;
     company: string;

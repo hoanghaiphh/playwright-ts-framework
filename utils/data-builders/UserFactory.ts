@@ -1,35 +1,73 @@
-import { UserInfo } from '@utils/data-contracts/UserInfo.model';
-import { NestedJson, FlatInNestedJson, FlatJson } from '@utils/data-contracts/UserInfo.interface';
-import { UserMappers } from '@utils/data-builders/UserMappers';
+import { Json1, Json2, Json3 } from '@utils/data-contracts/JsonSchema.interface';
 import { JsonDataService } from '@utils/services/JsonDataService';
+import { createUniqueEmail } from '@utils/helpers/common';
+import { UserInfo } from '@utils/data-contracts/UserInfo.inteface';
+import { ExcelDataService, DataRow } from '@utils/services/ExcelDataService';
 
 export class UserFactory {
 
     public static getUserFromJson1(): UserInfo {
         const relativePath = 'test-data/user-info/user-info-1.json';
-        const rawUserObject = JsonDataService.loadJsonObject<NestedJson>(relativePath);
+        const rawUserObject = JsonDataService.loadJsonObject<Json1>(relativePath);
 
         if (rawUserObject === undefined) throw new Error("JSON data null");
 
-        return UserMappers.mapNestedJson(rawUserObject);
+        return {
+            firstName: rawUserObject.name.firstName,
+            lastName: rawUserObject.name.lastName,
+            email: rawUserObject.login.email,
+            password: rawUserObject.login.password,
+            company: rawUserObject.company,
+        };
     }
 
     public static getAllUsersFromJson2(browserName: string): UserInfo[] {
         const relativePath = 'test-data/user-info/user-info-2.json';
-        const rawDataObject = JsonDataService.loadJsonObject<FlatInNestedJson>(relativePath);
+        const rawDataObject = JsonDataService.loadJsonObject<Json2>(relativePath);
 
         if (rawDataObject === undefined) throw new Error("JSON data null");
 
-        const rawUsersArray: FlatJson[] = rawDataObject.users;
+        const rawUsersArray: Json3[] = rawDataObject.users;
 
-        return rawUsersArray.map(rawUser => UserMappers.mapFlatJson(rawUser, browserName));
+        return rawUsersArray.map(rawUser => ({
+            firstName: rawUser.firstName,
+            lastName: rawUser.lastName,
+            company: rawUser.company,
+            email: createUniqueEmail(`${rawUser.firstName}.${rawUser.lastName}`, browserName),
+            password: 'defaultPassword',
+        }));
     }
 
     public static getAllUsersFromJson3(browserName: string): UserInfo[] {
         const relativePath = 'test-data/user-info/user-info-3.json';
-        const rawUsersArray = JsonDataService.loadJsonArray<FlatJson>(relativePath);
+        const rawUsersArray = JsonDataService.loadJsonArray<Json3>(relativePath);
 
-        return rawUsersArray.map(rawUser => UserMappers.mapFlatJson(rawUser, browserName));
+        return rawUsersArray.map(rawUser => ({
+            firstName: rawUser.firstName,
+            lastName: rawUser.lastName,
+            company: rawUser.company,
+            email: createUniqueEmail(`${rawUser.firstName}.${rawUser.lastName}`, browserName),
+            password: 'defaultPassword',
+        }));
+    }
+
+    public static async getAllUsersFromExcel(sheetName?: string): Promise<UserInfo[]> {
+        const relativePath = 'test-data/user-info/user-info.xlsx';
+        const excelService = new ExcelDataService();
+        const rawUsersArray: DataRow[] = await excelService.readExcelFile(relativePath, sheetName);
+
+        if (rawUsersArray.length === 0) {
+            console.warn(`WARNING: Excel file at ${relativePath} is empty or sheet "${sheetName}" not found.`);
+            return [];
+        }
+
+        return rawUsersArray.map(rawUser => ({
+            firstName: (rawUser.firstname ?? '').toString(),
+            lastName: (rawUser.lastname ?? '').toString(),
+            company: (rawUser.company ?? '').toString(),
+            email: (rawUser.email ?? '').toString(),
+            password: (rawUser.password ?? '').toString(),
+        }));
     }
 
 }

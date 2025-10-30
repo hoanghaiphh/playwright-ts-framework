@@ -4,7 +4,7 @@ import * as path from 'path';
 export class JsonDataService {
 
     public static loadJsonObject<T>(relativePath: string): T | undefined {
-        const filePath = path.join(process.cwd(), relativePath);
+        const filePath = path.resolve(relativePath);
 
         try {
             const fileContents = fs.readFileSync(filePath, 'utf-8');
@@ -17,7 +17,7 @@ export class JsonDataService {
     }
 
     public static loadJsonArray<T>(relativePath: string): T[] {
-        const filePath = path.join(process.cwd(), relativePath);
+        const filePath = path.resolve(relativePath);
 
         try {
             const fileContents = fs.readFileSync(filePath, 'utf-8');

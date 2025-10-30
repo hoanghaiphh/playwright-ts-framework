@@ -1,6 +1,6 @@
 import { test, Page } from '@playwright/test';
-import { UserInfo } from '@utils/data-contracts/UserInfo.model';
 import { UserFactory } from '@utils/data-builders/UserFactory';
+import { UserInfo } from '@utils/data-contracts/UserInfo.inteface';
 
 test.describe.serial('Data_Reader_Testing', () => {
 
@@ -53,7 +53,15 @@ test.describe.serial('Data_Reader_Testing', () => {
     });
 
     test('Excel', async () => {
+        userInfoList = await UserFactory.getAllUsersFromExcel();
 
+        userInfoList.forEach(user => {
+            console.log(`First Name: ${user.firstName}`)
+            console.log(`Last Name: ${user.lastName}`)
+            console.log(`Email: ${user.email}`)
+            console.log(`Password: ${user.password}`)
+            console.log(`Company: ${user.company}\n`)
+        });
     });
 
 })
