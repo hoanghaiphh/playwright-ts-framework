@@ -1,0 +1,21 @@
+{
+  "name": {
+    "firstName": "Automation",
+    "lastName": "Testing"
+  },
+  "company": "Automation FC",
+  "login": {
+    "email": "automation.testing_20250210_19_01@gmail.com",
+    "password": "Abcd@1234"
+  },
+  "languages": [
+    "Java",
+    "Javascript",
+    "Python",
+    "C#"
+  ],
+  "buildTools": [
+    "Maven",
+    "Gradle"
+  ]
+}

@@ -1,6 +1,6 @@
 import { fakerEN, fakerVI } from '@faker-js/faker';
 import { createUniqueEmail } from '@utils/helpers/common';
-import { UserInfo } from '@utils/data-models/UserInfo.model';
+import { UserInfo } from '@utils/models/UserInfo.model';
 
 export class UserGenerator {
 

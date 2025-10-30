@@ -3,7 +3,7 @@ import { Header } from '@pages/components/Header';
 import { LoginPage } from '@pages/app-pages/LoginPage';
 import { RegisterPage } from '@pages/app-pages/RegisterPage';
 import { CustomerInfoPage } from '@pages/app-pages/CustomerInfoPage';
-import { UserInfo } from '@utils/data-models/UserInfo.model';
+import { UserInfo } from '@utils/models/UserInfo.model';
 import { UserGenerator } from '@utils/generators/UserGenerator';
 
 test.describe.serial('Register_And_Login', () => {
