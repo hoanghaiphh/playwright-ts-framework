@@ -8,10 +8,10 @@ export class Header {
     readonly myAccountLink: Locator;
 
     constructor(page: Page) {
-        this.registerLink   = page.locator('.ico-register');
-        this.loginLink      = page.locator('.ico-login');
-        this.logoutLink     = page.locator('.ico-logout');
-        this.myAccountLink  = page.locator("//a[@class='ico-account' and text()='My account']");
+        this.registerLink = page.locator('.ico-register');
+        this.loginLink = page.locator('.ico-login');
+        this.logoutLink = page.locator('.ico-logout');
+        this.myAccountLink = page.locator("//a[@class='ico-account' and text()='My account']");
     }
 
     async clickOnRegisterLink(): Promise<void> {

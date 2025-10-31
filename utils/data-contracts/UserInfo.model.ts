@@ -24,5 +24,5 @@ export class UserInfo {
     public get email(): string { return this._email; }
     public get company(): string { return this._company; }
     public get password(): string { return this._password; }
-    
+
 }

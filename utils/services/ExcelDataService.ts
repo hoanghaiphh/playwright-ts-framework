@@ -1,3 +1,4 @@
+import logger from '@utils/helpers/logger';
 import * as ExcelJS from 'exceljs';
 import * as path from 'path';
 
@@ -18,7 +19,7 @@ export class ExcelDataService {
             // Rich Text --> text
             if ('text' in value) return value.text?.toString().trim() ?? null;
             // Date
-            if (value instanceof Date) return value.toISOString(); 
+            if (value instanceof Date) return value.toISOString();
             // other objects --> convert to string
             return value.toString().trim() !== '' ? value.toString().trim() : null;
         }
@@ -35,7 +36,7 @@ export class ExcelDataService {
         try {
             await workbook.xlsx.readFile(filePath);
         } catch (error) {
-            console.error(`ERROR: Failed to read file ${filePath}.`, error);
+            logger.error(`ERROR: Failed to read file ${filePath}.`, error);
             return [];
         }
 
@@ -44,13 +45,13 @@ export class ExcelDataService {
             : workbook.worksheets[0];
 
         if (!worksheet) {
-            console.error(`ERROR: Sheet "${sheetName}" not found in file: ${filePath}`);
+            logger.error(`ERROR: Sheet "${sheetName}" not found in file: ${filePath}`);
             return [];
         }
 
         const headerRow = worksheet.getRow(1);
         if (!headerRow) {
-            console.error(`ERROR: Header row is missing in sheet: ${worksheet.name}`);
+            logger.error(`ERROR: Header row is missing in sheet: ${worksheet.name}`);
             return [];
         }
 

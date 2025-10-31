@@ -3,6 +3,7 @@ import { JsonDataService } from '@utils/services/JsonDataService';
 import { createUniqueEmail } from '@utils/helpers/common';
 import { UserInfo } from '@utils/data-contracts/UserInfo.inteface';
 import { ExcelDataService, DataRow } from '@utils/services/ExcelDataService';
+import logger from '@utils/helpers/logger';
 
 export class UserFactory {
 
@@ -57,7 +58,7 @@ export class UserFactory {
         const rawUsersArray: DataRow[] = await excelService.readExcelFile(relativePath, sheetName);
 
         if (rawUsersArray.length === 0) {
-            console.warn(`WARNING: Excel file at ${relativePath} is empty or sheet "${sheetName}" not found.`);
+            logger.warn(`WARNING: Excel file at ${relativePath} is empty or sheet "${sheetName}" not found.`);
             return [];
         }
 

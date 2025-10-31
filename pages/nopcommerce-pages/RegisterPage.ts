@@ -14,15 +14,15 @@ export class RegisterPage {
     readonly successMessage: Locator;
 
     constructor(page: Page) {
-        this.genderMaleRadio        = page.locator('input#gender-male');
-        this.firstNameTextbox       = page.locator('input#FirstName');
-        this.lastNameTextbox        = page.locator('input#LastName');
-        this.emailTextbox           = page.locator('input#Email');
-        this.companyTextbox         = page.locator('input#Company');
-        this.passwordTextbox        = page.locator('input#Password');
+        this.genderMaleRadio = page.locator('input#gender-male');
+        this.firstNameTextbox = page.locator('input#FirstName');
+        this.lastNameTextbox = page.locator('input#LastName');
+        this.emailTextbox = page.locator('input#Email');
+        this.companyTextbox = page.locator('input#Company');
+        this.passwordTextbox = page.locator('input#Password');
         this.confirmPasswordTextbox = page.locator('input#ConfirmPassword');
-        this.registerButton         = page.locator('#register-button');
-        this.successMessage         = page.locator('.result');
+        this.registerButton = page.locator('#register-button');
+        this.successMessage = page.locator('.result');
     }
 
     async checkGenderMaleRadio(): Promise<void> {

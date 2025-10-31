@@ -1,3 +1,4 @@
+import logger from '@utils/helpers/logger';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -11,7 +12,7 @@ export class JsonDataService {
             return JSON.parse(fileContents) as T;
 
         } catch (error) {
-            console.error(`ERROR: Failed to load data from ${filePath}`, error);
+            logger.error(`ERROR: Failed to load data from ${filePath}`, error);
             return undefined;
         }
     }
@@ -24,7 +25,7 @@ export class JsonDataService {
             return JSON.parse(fileContents) as T[];
 
         } catch (error) {
-            console.error(`ERROR: Failed to load data from ${filePath}`, error);
+            logger.error(`ERROR: Failed to load data from ${filePath}`, error);
             return [];
         }
     }

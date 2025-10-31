@@ -16,9 +16,12 @@
     "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.56.1",
     "@types/exceljs": "^0.5.3",
-    "@types/node": "^24.9.1"
+    "@types/node": "^24.9.1",
+    "@types/winston": "^2.4.4"
   },
   "dependencies": {
-    "exceljs": "^4.4.0"
+    "exceljs": "^4.4.0",
+    "winston": "^3.18.3",
+    "winston-daily-rotate-file": "^5.0.0"
   }
 }

@@ -8,9 +8,9 @@ export class LoginPage {
     readonly loginButton: Locator;
 
     constructor(page: Page) {
-        this.emailTextbox       = page.locator('input#Email');
-        this.passwordTextbox    = page.locator('input#Password');
-        this.loginButton        = page.locator('button.button-1.login-button');
+        this.emailTextbox = page.locator('input#Email');
+        this.passwordTextbox = page.locator('input#Password');
+        this.loginButton = page.locator('button.button-1.login-button');
     }
 
     async fillInEmailTextbox(email: string): Promise<void> {

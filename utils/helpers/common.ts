@@ -20,7 +20,7 @@ export function createUniqueEmail(prefix: string, browserName: string): string {
     ].join('');
 
     const cleanPrefix = removeDiacritics(prefix).replace(/\s/g, '');
-    
+
     const cleanBrowserName = browserName.toLowerCase();
 
     return `${cleanPrefix}_${timestamp}_${cleanBrowserName}@example.com`;

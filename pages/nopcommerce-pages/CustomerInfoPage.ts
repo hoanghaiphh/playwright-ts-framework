@@ -8,10 +8,10 @@ export class CustomerInfoPage {
     readonly companyTextbox: Locator;
 
     constructor(page: Page) {
-        this.genderMaleRadio    = page.locator('input#gender-male');
-        this.firstNameTextbox   = page.locator('input#FirstName');
-        this.lastNameTextbox    = page.locator('input#LastName');
-        this.companyTextbox     = page.locator('input#Company');
+        this.genderMaleRadio = page.locator('input#gender-male');
+        this.firstNameTextbox = page.locator('input#FirstName');
+        this.lastNameTextbox = page.locator('input#LastName');
+        this.companyTextbox = page.locator('input#Company');
     }
 
     async isGenderMaleSelected(): Promise<boolean> {
