@@ -3,7 +3,7 @@ import { Header } from '@pages/nopcommerce-components/Header';
 import { LoginPage } from '@pages/nopcommerce-pages/LoginPage';
 import { RegisterPage } from '@pages/nopcommerce-pages/RegisterPage';
 import { CustomerInfoPage } from '@pages/nopcommerce-pages/CustomerInfoPage';
-import { UserInfo } from '@utils/data-contracts/UserInfo.model';
+import { UserInfoModel } from '@utils/data-contracts/UserInfo.model';
 import { UserGenerator } from '@utils/data-builders/UserGenerator';
 import logger, { initializeRunLogger, cleanupRunLogger } from '@utils/helpers/logger';
 
@@ -14,11 +14,11 @@ test.describe.serial('Register_And_Login', () => {
     let loginPage: LoginPage;
     let registerPage: RegisterPage;
     let customerInfoPage: CustomerInfoPage;
-    let userInfo: UserInfo;
+    let userInfo: UserInfoModel;
 
     test.beforeAll(async ({ browser }, testInfo) => {
         const browserName = testInfo.project.name.toUpperCase();
-        
+
         initializeRunLogger(testInfo);
         logger.info(`---------- Start testing Register and Login funtions on ${browserName} ----------\n`);
 
@@ -51,7 +51,7 @@ test.describe.serial('Register_And_Login', () => {
             - Company: ${userInfo.company}
             - Email: ${userInfo.email}
             - Password: ${userInfo.password}`);
-        await registerPage.addUserInfo(userInfo);
+        await registerPage.addUserInfoUsingModel(userInfo);
 
         logger.info(`User_01_Register: Click on Register button`);
         await registerPage.clickOnRegisterButton();
@@ -73,7 +73,7 @@ test.describe.serial('Register_And_Login', () => {
         logger.info(`User_02_Login: Login to system with:
             - Email: ${userInfo.email} 
             - Password: ${userInfo.password}`);
-        await loginPage.loginToSystem(userInfo);
+        await loginPage.loginToSystemWithUserInfoModel(userInfo);
 
         logger.info(`User_02_Login: Verify that My Account link appeared at Header\n`);
         const displayed = await header.isMyAccountLinkDisplayed();

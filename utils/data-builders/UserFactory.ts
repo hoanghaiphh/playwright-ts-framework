@@ -1,13 +1,13 @@
 import { Json1, Json2, Json3 } from '@utils/data-contracts/JsonSchema.interface';
 import { JsonDataService } from '@utils/services/JsonDataService';
 import { createUniqueEmail } from '@utils/helpers/common';
-import { UserInfo } from '@utils/data-contracts/UserInfo.inteface';
+import { UserInfoInterface } from '@utils/data-contracts/UserInfo.inteface';
 import { ExcelDataService, DataRow } from '@utils/services/ExcelDataService';
 import logger from '@utils/helpers/logger';
 
 export class UserFactory {
 
-    public static getUserFromJson1(): UserInfo {
+    public static getUserFromJson1(): UserInfoInterface {
         const relativePath = 'test-data/user-info/user-info-1.json';
         const rawUserObject = JsonDataService.loadJsonObject<Json1>(relativePath);
 
@@ -22,7 +22,7 @@ export class UserFactory {
         };
     }
 
-    public static getAllUsersFromJson2(browserName: string): UserInfo[] {
+    public static getAllUsersFromJson2(browserName: string): UserInfoInterface[] {
         const relativePath = 'test-data/user-info/user-info-2.json';
         const rawDataObject = JsonDataService.loadJsonObject<Json2>(relativePath);
 
@@ -39,7 +39,7 @@ export class UserFactory {
         }));
     }
 
-    public static getAllUsersFromJson3(browserName: string): UserInfo[] {
+    public static getAllUsersFromJson3(browserName: string): UserInfoInterface[] {
         const relativePath = 'test-data/user-info/user-info-3.json';
         const rawUsersArray = JsonDataService.loadJsonArray<Json3>(relativePath);
 
@@ -52,7 +52,7 @@ export class UserFactory {
         }));
     }
 
-    public static async getAllUsersFromExcel(sheetName?: string): Promise<UserInfo[]> {
+    public static async getAllUsersFromExcel(sheetName?: string): Promise<UserInfoInterface[]> {
         const relativePath = 'test-data/user-info/user-info.xlsx';
         const excelService = new ExcelDataService();
         const rawUsersArray: DataRow[] = await excelService.readExcelFile(relativePath, sheetName);

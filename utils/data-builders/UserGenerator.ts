@@ -1,10 +1,10 @@
 import { fakerEN, fakerVI } from '@faker-js/faker';
 import { createUniqueEmail } from '@utils/helpers/common';
-import { UserInfo } from '@utils/data-contracts/UserInfo.model';
+import { UserInfoModel } from '@utils/data-contracts/UserInfo.model';
 
 export class UserGenerator {
 
-    public static generate(browserName: string, overrides?: Partial<UserInfo>): UserInfo {
+    public static generate(browserName: string, overrides?: Partial<UserInfoModel>): UserInfoModel {
 
         const randomFirstName = fakerVI.person.firstName();
         const randomLastName = fakerVI.person.lastName();
@@ -17,7 +17,7 @@ export class UserGenerator {
         const company = overrides?.company ?? randomCompany;
         const password = overrides?.password ?? randomPassword;
 
-        const userInfo = new UserInfo();
+        const userInfo = new UserInfoModel();
         userInfo.setFirstName(firstName);
         userInfo.setLastName(lastName);
         userInfo.setEmail(email);

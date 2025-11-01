@@ -1,11 +1,11 @@
-export class UserInfo {
+export class UserInfoModel {
     private _firstName: string;
     private _lastName: string;
     private _email: string;
     private _company: string;
     private _password: string;
 
-    constructor(data?: Partial<UserInfo>) {
+    constructor(data?: Partial<UserInfoModel>) {
         this._firstName = data?.firstName || '';
         this._lastName = data?.lastName || '';
         this._email = data?.email || '';

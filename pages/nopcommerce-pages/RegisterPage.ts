@@ -1,5 +1,6 @@
 import { Page, Locator } from '@playwright/test'
-import { UserInfo } from '@utils/data-contracts/UserInfo.model';
+import { UserInfoModel } from '@utils/data-contracts/UserInfo.model';
+import { UserInfoInterface } from '@utils/data-contracts/UserInfo.inteface';
 
 export class RegisterPage {
 
@@ -58,7 +59,16 @@ export class RegisterPage {
         return (await this.successMessage.textContent()) ?? '';
     }
 
-    async addUserInfo(userInfo: UserInfo): Promise<void> {
+    async addUserInfoUsingModel(userInfo: UserInfoModel): Promise<void> {
+        await this.checkGenderMaleRadio();
+        await this.fillInFirstnameTextbox(userInfo.firstName);
+        await this.fillInLastnameTextbox(userInfo.lastName);
+        await this.fillInEmailTextbox(userInfo.email);
+        await this.fillInCompanyTextbox(userInfo.company);
+        await this.fillInPasswordTextbox(userInfo.password);
+    }
+
+    async addUserInfoUsingInterface(userInfo: UserInfoInterface): Promise<void> {
         await this.checkGenderMaleRadio();
         await this.fillInFirstnameTextbox(userInfo.firstName);
         await this.fillInLastnameTextbox(userInfo.lastName);

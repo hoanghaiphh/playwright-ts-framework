@@ -42,11 +42,12 @@ const logger: Logger = createLogger({
 
 export function initializeRunLogger(testInfo: any): void {
     const now = new Date();
-    const timeStamp = now.toLocaleString('sv-SE').replace(/ /g, '_').replace(/:/g, '').replace(/-/g, '');
-    const suiteName = testInfo.titlePath[1].toLowerCase().replace(/\s/g, '_');
-    const browserName = testInfo.project.name.toLowerCase().replace(/\s/g, '_');
+    const timeStamp = now.toLocaleString('sv-SE').replace(/-/g, '').replace(/:/g, '').replace(/ /g, '_');
 
-    const runID = `${timeStamp}_${suiteName}_${browserName}`;
+    const browserName = testInfo.project.name.toLowerCase().replace(/\s/g, '_');
+    const specName = testInfo.file.split(/[\\/]/).pop()!.replace('.spec.ts', '').replace(/\s/g, '_');
+
+    const runID = `${timeStamp}_${specName}_${browserName}`;
 
     if (!require('fs').existsSync('logs/runs')) {
         require('fs').mkdirSync('logs/runs', { recursive: true });

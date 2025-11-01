@@ -1,5 +1,6 @@
 import { Page, Locator } from '@playwright/test';
-import { UserInfo } from '@utils/data-contracts/UserInfo.model';
+import { UserInfoInterface } from '@utils/data-contracts/UserInfo.inteface';
+import { UserInfoModel } from '@utils/data-contracts/UserInfo.model';
 
 export class LoginPage {
 
@@ -25,7 +26,13 @@ export class LoginPage {
         await this.loginButton.click();
     }
 
-    async loginToSystem(userInfo: UserInfo): Promise<void> {
+    async loginToSystemWithUserInfoModel(userInfo: UserInfoModel): Promise<void> {
+        await this.emailTextbox.fill(userInfo.email);
+        await this.passwordTextbox.fill(userInfo.password);
+        await this.clickOnLoginButton();
+    }
+
+    async loginToSystemWithUserInfoInterface(userInfo: UserInfoInterface): Promise<void> {
         await this.emailTextbox.fill(userInfo.email);
         await this.passwordTextbox.fill(userInfo.password);
         await this.clickOnLoginButton();
