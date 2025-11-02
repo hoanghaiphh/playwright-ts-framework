@@ -1,5 +1,5 @@
 import { test, expect, Page, Browser } from '@playwright/test';
-import { Header } from '@pages/nopcommerce-components/Header';
+import { Header } from '@pages/nopcommerce-components/HeaderComponent';
 import { LoginPage } from '@pages/nopcommerce-pages/LoginPage';
 import { RegisterPage } from '@pages/nopcommerce-pages/RegisterPage';
 import { CustomerInfoPage } from '@pages/nopcommerce-pages/CustomerInfoPage';

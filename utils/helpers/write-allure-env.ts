@@ -3,7 +3,7 @@ import * as path from 'path';
 
 const data: string[] = [
     `Platform=${process.platform || 'N/A'}`,
-    `Node.js_Version=${process.version || 'N/A'}`,
+    `NodeJS.Version=${process.version || 'N/A'}`,
 ];
 
 const content: string = data.join('\n');

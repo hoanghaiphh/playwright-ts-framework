@@ -1,8 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
+import { currentConfig } from 'configs/env.config';
 
 export default defineConfig({
 
-  testDir: './tests/nopcommerce-e2e',
+  testDir: './tests',
 
   fullyParallel: true,
 
@@ -13,12 +14,13 @@ export default defineConfig({
   workers: process.env.CI ? 1 : 3,
 
   reporter: [
+    ['html'],
     ['line'],
     ['allure-playwright', { resultsDir: 'allure-results', suitesTitle: true, }]
   ],
 
   use: {
-    baseURL: process.env.BASE_URL || 'http://localhost:8086/',
+    baseURL: currentConfig.appUrl,
     headless: false,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',

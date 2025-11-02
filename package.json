@@ -3,16 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test",
     "log:clean:all": "rimraf logs",
     "log:clean:combined": "rimraf logs/combined",
     "log:clean:error": "rimraf logs/error",
     "log:clean:runs": "rimraf logs/runs",
-    "allure:test": "npx playwright test $@ --reporter=line,allure-playwright",
-    "allure:test:oneworker": "npx playwright test $@ --reporter=line,allure-playwright --workers=1",
     "allure:clean": "rimraf allure-results playwright-report",
     "allure:serve": "ts-node utils/helpers/write-allure-env.ts ; allure serve allure-results",
-    "allure:all": "npm run allure:clean ; npm run allure:test ; npm run allure:serve"
+    "allure:test": "npm run allure:clean ; cross-env TEST_ENV=$env playwright test",
+    "allure:test:oneworker": "npm run allure:clean ; cross-env TEST_ENV=$env playwright test --workers=1"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +25,7 @@
     "allure-commandline": "^2.34.1",
     "allure-js-commons": "^3.4.2",
     "allure-playwright": "^3.4.2",
+    "cross-env": "^10.1.0",
     "rimraf": "^6.1.0",
     "ts-node": "^10.9.2"
   },

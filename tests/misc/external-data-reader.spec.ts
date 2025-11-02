@@ -2,7 +2,7 @@ import { test, Page } from '@playwright/test';
 import { UserFactory } from '@utils/data-builders/UserFactory';
 import { UserInfoInterface } from '@utils/data-contracts/UserInfo.inteface';
 
-test.describe.serial('Data_Reader_Testing', () => {
+test.describe.serial('External_Data_Reader', () => {
 
     let page: Page;
     let userInfo: UserInfoInterface;
