@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "log:clean:all": "rimraf logs",
+    "log:clean": "rimraf logs",
     "log:clean:combined": "rimraf logs/combined",
     "log:clean:error": "rimraf logs/error",
     "log:clean:runs": "rimraf logs/runs",
-    "allure:clean": "rimraf allure-results playwright-report",
-    "allure:serve": "ts-node utils/helpers/write-allure-env.ts ; allure serve allure-results",
-    "allure:test": "npm run allure:clean ; cross-env TEST_ENV=$env playwright test",
-    "allure:test:oneworker": "npm run allure:clean ; cross-env TEST_ENV=$env playwright test --workers=1"
+    "report:clean": "rimraf allure-results playwright-report",
+    "test:prepare": "npm run log:clean:runs ; npm run report:clean",
+    "test:run": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test",
+    "test:run:oneworker": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --workers=1",
+    "allure:serve": "ts-node utils/write-allure-env.ts ; allure serve allure-results"
   },
   "keywords": [],
   "author": "",
@@ -30,7 +31,9 @@
     "ts-node": "^10.9.2"
   },
   "dependencies": {
+    "@types/mssql": "^9.1.8",
     "exceljs": "^4.4.0",
+    "mssql": "^12.0.0",
     "winston": "^3.18.3",
     "winston-daily-rotate-file": "^5.0.0"
   }

@@ -1,9 +1,9 @@
-import { Json1, Json2, Json3 } from '@utils/data-contracts/JsonSchema.interface';
-import { JsonDataService } from '@utils/services/JsonDataService';
-import { createUniqueEmail } from '@utils/helpers/common';
-import { UserInfoInterface } from '@utils/data-contracts/UserInfo.inteface';
-import { ExcelDataService, DataRow } from '@utils/services/ExcelDataService';
-import logger from '@utils/helpers/logger';
+import { Json1, Json2, Json3 } from '@models/json-schema.interface';
+import { UserInfoInterface } from '@models/user-info.interface';
+import { JsonDataService } from '@services/json.service';
+import { ExcelDataService, DataRow } from '@services/excel.service';
+import { createUniqueEmail } from '@utils/common';
+import logger from '@utils/logger';
 
 export class UserFactory {
 

@@ -13,8 +13,20 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
+      "@configs/*": [
+        "configs/*"
+      ],
+      "@factories/*": [
+        "factories/*"
+      ],
+      "@models/*": [
+        "models/*"
+      ],
       "@pages/*": [
         "pages/*"
+      ],
+      "@services/*": [
+        "services/*"
       ],
       "@utils/*": [
         "utils/*"
@@ -26,10 +38,13 @@
     ]
   },
   "include": [
-    "tests",
+    "configs",
+    "factories",
+    "models",
     "pages",
+    "services",
+    "tests",
     "utils",
     "playwright.config.ts",
-    "configs/env.config.ts"
   ]
 }

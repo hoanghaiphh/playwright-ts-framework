@@ -3,9 +3,10 @@ import { Header } from '@pages/nopcommerce-components/HeaderComponent';
 import { LoginPage } from '@pages/nopcommerce-pages/LoginPage';
 import { RegisterPage } from '@pages/nopcommerce-pages/RegisterPage';
 import { CustomerInfoPage } from '@pages/nopcommerce-pages/CustomerInfoPage';
-import { UserInfoInterface } from '@utils/data-contracts/UserInfo.inteface';
-import logger, { initializeRunLogger, cleanupRunLogger } from '@utils/helpers/logger';
-import { UserFactory } from '@utils/data-builders/UserFactory';
+import { UserInfoModel } from '@models/user-info.model';
+import { UserGenerator } from '@factories/user-generator';
+import logger, { initializeRunLogger, cleanupRunLogger } from '@utils/logger';
+import sqlServiceInstance from '@services/sql-server.service';
 
 test.describe.serial('Register_And_Login', () => {
 
@@ -14,13 +15,15 @@ test.describe.serial('Register_And_Login', () => {
     let loginPage: LoginPage;
     let registerPage: RegisterPage;
     let customerInfoPage: CustomerInfoPage;
-    let userInfo: UserInfoInterface;
+    let userInfo: UserInfoModel;
 
     test.beforeAll(async ({ browser }, testInfo) => {
         const browserName = testInfo.project.name.toUpperCase();
 
         initializeRunLogger(testInfo);
         logger.info(`---------- Start testing Register and Login funtions on ${browserName} ----------\n`);
+
+        await sqlServiceInstance.connect();
 
         page = await browser.newPage();
 
@@ -29,12 +32,14 @@ test.describe.serial('Register_And_Login', () => {
         registerPage = new RegisterPage(page);
         customerInfoPage = new CustomerInfoPage(page);
 
-        userInfo = UserFactory.getAllUsersFromJson3(browserName)[testInfo.workerIndex];
+        userInfo = UserGenerator.generate(browserName);
 
         await page.goto('/');
     });
 
     test.afterAll(async () => {
+        await sqlServiceInstance.disconnect();
+
         logger.info(`---------- End testing Register and Login functions and close page ----------\n`);
         cleanupRunLogger();
 
@@ -51,7 +56,7 @@ test.describe.serial('Register_And_Login', () => {
             - Company: ${userInfo.company}
             - Email: ${userInfo.email}
             - Password: ${userInfo.password}`);
-        await registerPage.addUserInfoUsingInterface(userInfo);
+        await registerPage.addUserInfoUsingModel(userInfo);
 
         logger.info(`User_01_Register: Click on Register button`);
         await registerPage.clickOnRegisterButton();
@@ -73,7 +78,7 @@ test.describe.serial('Register_And_Login', () => {
         logger.info(`User_02_Login: Login to system with:
             - Email: ${userInfo.email} 
             - Password: ${userInfo.password}`);
-        await loginPage.loginToSystemWithUserInfoInterface(userInfo);
+        await loginPage.loginToSystemWithUserInfoModel(userInfo);
 
         logger.info(`User_02_Login: Verify that My Account link appeared at Header\n`);
         const displayed = await header.isMyAccountLinkDisplayed();
@@ -93,6 +98,43 @@ test.describe.serial('Register_And_Login', () => {
         expect(await customerInfoPage.getValueInFirstnameTextbox()).toBe(userInfo.firstName);
         expect(await customerInfoPage.getValueInLastnameTextbox()).toBe(userInfo.lastName);
         expect(await customerInfoPage.getValueInCompanyTextbox()).toBe(userInfo.company);
+    });
+
+    test('User_04_Database_Verification', async () => {
+        logger.info(`User_04_Database_Verification: Verify that customer exists in database`);
+
+        const selectQuery = `
+        SELECT [Email],[FirstName],[LastName],[Company] 
+        FROM [nopcommerce].[dbo].[Customer] 
+        WHERE [Email] = '${userInfo.email}'`;
+        const result = await sqlServiceInstance.executeQuery<{
+            Email: string,
+            FirstName: string,
+            LastName: string,
+            Company: string
+        }>(selectQuery);
+
+        expect(result.recordset.length).toEqual(1);
+
+        logger.info(`User_04_Database_Verification: Verity that customer information in database is correct:
+            - First Name: ${userInfo.firstName}
+            - Last Name: ${userInfo.lastName}
+            - Company: ${userInfo.company}
+            - Email: ${userInfo.email}`);
+
+        const dbRecord = result.recordset[0];
+        expect(dbRecord.FirstName).toBe(userInfo.firstName);
+        expect(dbRecord.LastName).toBe(userInfo.lastName);
+        expect(dbRecord.Company).toBe(userInfo.company);
+        expect(dbRecord.Email).toBe(userInfo.email);
+
+        logger.info(`User_04_Database_Verification: Delete blank records in database\n`);
+
+        const deleteQuery = `
+        DELETE FROM [nopcommerce].[dbo].[Customer] 
+        WHERE [Email] IS NULL AND [FirstName] IS NULL AND [LastName] IS NULL`;
+
+        await sqlServiceInstance.executeQuery(deleteQuery);
     });
 
 })

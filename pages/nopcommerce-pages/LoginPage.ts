@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test';
-import { UserInfoInterface } from '@utils/data-contracts/UserInfo.inteface';
-import { UserInfoModel } from '@utils/data-contracts/UserInfo.model';
+import { UserInfoModel } from '@models/user-info.model';
+import { UserInfoInterface } from '@models/user-info.interface';
 
 export class LoginPage {
 
@@ -14,28 +14,22 @@ export class LoginPage {
         this.loginButton = page.locator('button.button-1.login-button');
     }
 
-    async fillInEmailTextbox(email: string): Promise<void> {
+    async loginToSystem(email: string, password: string): Promise<void> {
         await this.emailTextbox.fill(email);
-    }
-
-    async fillInPasswordTextbox(password: string): Promise<void> {
         await this.passwordTextbox.fill(password);
-    }
-
-    async clickOnLoginButton(): Promise<void> {
         await this.loginButton.click();
     }
 
     async loginToSystemWithUserInfoModel(userInfo: UserInfoModel): Promise<void> {
         await this.emailTextbox.fill(userInfo.email);
         await this.passwordTextbox.fill(userInfo.password);
-        await this.clickOnLoginButton();
+        await this.loginButton.click();
     }
 
     async loginToSystemWithUserInfoInterface(userInfo: UserInfoInterface): Promise<void> {
         await this.emailTextbox.fill(userInfo.email);
         await this.passwordTextbox.fill(userInfo.password);
-        await this.clickOnLoginButton();
+        await this.loginButton.click();
     }
 
 }

@@ -1,17 +1,15 @@
 import { defineConfig, devices } from '@playwright/test';
 import { currentConfig } from 'configs/env.config';
 
+const isCI = !!process.env.CI;
+
 export default defineConfig({
 
   testDir: './tests',
-
   fullyParallel: true,
-
-  forbidOnly: !!process.env.CI,
-
-  retries: process.env.CI ? 2 : 0,
-
-  workers: process.env.CI ? 1 : 3,
+  forbidOnly: isCI,
+  retries: isCI ? 2 : 0,
+  workers: isCI ? 1 : 3,
 
   reporter: [
     ['html'],
@@ -21,7 +19,7 @@ export default defineConfig({
 
   use: {
     baseURL: currentConfig.appUrl,
-    headless: false,
+    headless: isCI,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'

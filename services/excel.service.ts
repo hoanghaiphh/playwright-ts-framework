@@ -1,4 +1,4 @@
-import logger from '@utils/helpers/logger';
+import logger from '@utils/logger';
 import * as ExcelJS from 'exceljs';
 import * as path from 'path';
 

@@ -1,6 +1,6 @@
 import { test, Page } from '@playwright/test';
-import { UserFactory } from '@utils/data-builders/UserFactory';
-import { UserInfoInterface } from '@utils/data-contracts/UserInfo.inteface';
+import { UserFactory } from '@factories/user-factory';
+import { UserInfoInterface } from '@models/user-info.interface';
 
 test.describe.serial('External_Data_Reader', () => {
 
