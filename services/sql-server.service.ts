@@ -27,10 +27,9 @@ export class SqlServerService {
         if (!this.connectionPool) {
             try {
                 this.connectionPool = await new sql.ConnectionPool(dbConfig).connect();
-                logger.info(`Successfully connect to SQL server ${dbConfig.database} at ${dbConfig.server}:${dbConfig.port}\n`);
+                logger.info(`Successfully connect to SQL server ${dbConfig.database} at ${dbConfig.server}:${dbConfig.port}`);
             } catch (error) {
                 logger.error('Failed to initialize database connection: ', error);
-                throw new Error('Failed to initialize database connection');
             }
         }
     }
@@ -49,11 +48,19 @@ export class SqlServerService {
 
     public async executeQuery<T>(query: string): Promise<sql.IResult<T>> {
         if (!this.connectionPool) {
+            logger.error('Database connection has not been initialized');
             throw new Error('Database connection has not been initialized');
         }
 
         try {
-            return await this.connectionPool.request().query<T>(query);
+            const result = await this.connectionPool.request().query<T>(query);
+            const rowCount = result.rowsAffected.length > 0
+                ? result.rowsAffected[0]
+                : result.recordset
+                    ? result.recordset.length
+                    : 0;
+            logger.info(`Successfully executed query: ${query}. Rows affected/returned: ${rowCount}`);
+            return result;
         } catch (error) {
             logger.error(`Failed to execute query: ${query}`, error);
             throw error;
@@ -64,18 +71,21 @@ export class SqlServerService {
         query: string, parameters: { name: string, type: sql.ISqlType, value: any }[]): Promise<sql.IResult<T>> {
 
         if (!this.connectionPool) {
+            logger.error('Database connection has not been initialized');
             throw new Error('Database connection has not been initialized');
         }
 
         try {
             const request = this.connectionPool.request();
-
-            parameters.forEach(param => {
-                request.input(param.name, param.type, param.value);
-            });
-
-            return await request.query<T>(query);
-
+            parameters.forEach(param => { request.input(param.name, param.type, param.value); });
+            const result = await request.query<T>(query);
+            const rowCount = result.rowsAffected.length > 0
+                ? result.rowsAffected[0]
+                : result.recordset
+                    ? result.recordset.length
+                    : 0;
+            logger.info(`Successfully executed parameterized query: ${query} with ${parameters.length} parameters. Rows affected/returned: ${rowCount}`);
+            return result;
         } catch (error) {
             logger.error(`Failed to execute parameterized query: ${query}`, error);
             throw error;

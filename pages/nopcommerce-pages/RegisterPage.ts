@@ -1,8 +1,7 @@
 import { Page, Locator } from '@playwright/test'
-import { UserInfoModel } from '@models/user-info.model';
-import { UserInfoInterface } from '@models/user-info.interface';
+import { BasePage } from '@pages/core/BasePage';
 
-export class RegisterPage {
+export class RegisterPage extends BasePage {
 
     readonly genderMaleRadio: Locator;
     readonly firstNameTextbox: Locator;
@@ -15,6 +14,7 @@ export class RegisterPage {
     readonly successMessage: Locator;
 
     constructor(page: Page) {
+        super(page);
         this.genderMaleRadio = page.locator('input#gender-male');
         this.firstNameTextbox = page.locator('input#FirstName');
         this.lastNameTextbox = page.locator('input#LastName');
@@ -28,41 +28,21 @@ export class RegisterPage {
 
     async addUserInfo(
         firstName: string, lastName: string, company: string, email: string, password: string): Promise<void> {
-        await this.genderMaleRadio.check();
-        await this.firstNameTextbox.fill(firstName);
-        await this.lastNameTextbox.fill(lastName);
-        await this.companyTextbox.fill(company);
-        await this.emailTextbox.fill(email);
-        await this.passwordTextbox.fill(password);
-        await this.confirmPasswordTextbox.fill(password);
-    }
-
-    async addUserInfoUsingModel(userInfo: UserInfoModel): Promise<void> {
-        await this.genderMaleRadio.check();
-        await this.firstNameTextbox.fill(userInfo.firstName);
-        await this.lastNameTextbox.fill(userInfo.lastName);
-        await this.companyTextbox.fill(userInfo.company);
-        await this.emailTextbox.fill(userInfo.email);
-        await this.passwordTextbox.fill(userInfo.password);
-        await this.confirmPasswordTextbox.fill(userInfo.password);
-    }
-
-    async addUserInfoUsingInterface(userInfo: UserInfoInterface): Promise<void> {
-        await this.genderMaleRadio.check();
-        await this.firstNameTextbox.fill(userInfo.firstName);
-        await this.lastNameTextbox.fill(userInfo.lastName);
-        await this.companyTextbox.fill(userInfo.company);
-        await this.emailTextbox.fill(userInfo.email);
-        await this.passwordTextbox.fill(userInfo.password);
-        await this.confirmPasswordTextbox.fill(userInfo.password);
+        await this.checkRadioButton(this.genderMaleRadio);
+        await this.fillText(this.firstNameTextbox, firstName);
+        await this.fillText(this.lastNameTextbox, lastName);
+        await this.fillText(this.companyTextbox, company);
+        await this.fillText(this.emailTextbox, email);
+        await this.fillText(this.passwordTextbox, password);
+        await this.fillText(this.confirmPasswordTextbox, password);
     }
 
     async clickOnRegisterButton(): Promise<void> {
-        await this.registerButton.click();
+        await this.clickElement(this.registerButton);
     }
 
     async getRegisterSuccessMessage(): Promise<string> {
-        return (await this.successMessage.textContent()) ?? '';
+        return await this.getCleanText(this.successMessage);
     }
 
 }

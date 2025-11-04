@@ -1,99 +1,88 @@
-import { test, expect, Page, Browser } from '@playwright/test';
-import { Header } from '@pages/nopcommerce-components/HeaderComponent';
-import { LoginPage } from '@pages/nopcommerce-pages/LoginPage';
-import { RegisterPage } from '@pages/nopcommerce-pages/RegisterPage';
-import { CustomerInfoPage } from '@pages/nopcommerce-pages/CustomerInfoPage';
+import { Page, test, expect } from '@playwright/test';
+import { BasePage } from '@pages/core/BasePage';
 import { UserInfoInterface } from '@models/user-info.interface';
 import { UserFactory } from '@factories/user-factory';
 import logger, { initializeRunLogger, cleanupRunLogger } from '@utils/logger';
 import sqlServiceInstance from '@services/sql-server.service';
+import { Header } from '@pages/nopcommerce-components/Header';
+import { RegisterPage } from '@pages/nopcommerce-pages/RegisterPage';
+import { LoginPage } from '@pages/nopcommerce-pages/LoginPage';
+import { CustomerInfoPage } from '@pages/nopcommerce-pages/CustomerInfoPage';
+import { feature, story, severity, description, Severity } from 'allure-js-commons';
 
-test.describe.serial('Register_And_Login', () => {
+test.describe.serial('Customer_Register_And_Login', () => {
 
+    let userInfo: UserInfoInterface;
     let page: Page;
     let header: Header;
-    let loginPage: LoginPage;
     let registerPage: RegisterPage;
+    let loginPage: LoginPage;
     let customerInfoPage: CustomerInfoPage;
-    let userInfo: UserInfoInterface;
 
-    test.beforeAll(async ({ browser }, testInfo) => {
+    test.beforeAll(async ({ browser, baseURL }, testInfo) => {
         const browserName = testInfo.project.name.toUpperCase();
-
         initializeRunLogger(testInfo);
-        logger.info(`---------- Start testing Register and Login funtions on ${browserName} ----------\n`);
+        logger.info(`========== Customer: Register and Login functions testing on ${browserName} start ==========\n`);
 
         await sqlServiceInstance.connect();
 
+        userInfo = UserFactory.getAllUsersFromJson3(browserName)[testInfo.workerIndex];
         page = await browser.newPage();
 
         header = new Header(page);
-        loginPage = new LoginPage(page);
         registerPage = new RegisterPage(page);
+        loginPage = new LoginPage(page);
         customerInfoPage = new CustomerInfoPage(page);
 
-        userInfo = UserFactory.getAllUsersFromJson3(browserName)[testInfo.workerIndex];
-
-        await page.goto('/');
+        await new BasePage(page).gotoPage(baseURL!);
     });
 
     test.afterAll(async () => {
-        await sqlServiceInstance.disconnect();
-
-        logger.info(`---------- End testing Register and Login functions and close page ----------\n`);
-        cleanupRunLogger();
-
         await page.close();
+        await sqlServiceInstance.disconnect();
+        logger.info(`========== Customer: Register and Login functions testing done ==========\n`);
+        cleanupRunLogger();
+    });
+
+    test.beforeEach(async () => {
+        feature('User Management');
     });
 
     test('User_01_Register', async () => {
-        logger.info(`User_01_Register: Click on Register link at Header`);
+        story('1 - Register');
+        description('Test registration with valid data');
+        severity(Severity.NORMAL);
+        logger.info(`----- User_01_Register:`);
+
         await header.clickOnRegisterLink();
 
-        logger.info(`User_01_Register: Fill out customer information with data:
-            - First Name: ${userInfo.firstName}
-            - Last Name: ${userInfo.lastName}
-            - Company: ${userInfo.company}
-            - Email: ${userInfo.email}
-            - Password: ${userInfo.password}`);
-        await registerPage.addUserInfoUsingInterface(userInfo);
-
-        logger.info(`User_01_Register: Click on Register button`);
+        await registerPage.addUserInfo(
+            userInfo.firstName, userInfo.lastName, userInfo.company, userInfo.email, userInfo.password);
         await registerPage.clickOnRegisterButton();
-
-        const expectMsg = 'Your registration completed';
-        logger.info(`User_01_Register: Verify that success message is displayed:
-            ${expectMsg}\n`);
-        const actualMsg = await registerPage.getRegisterSuccessMessage();
-        expect(actualMsg).toContain('Your registration completed');
+        expect(await registerPage.getRegisterSuccessMessage()).toContain('Your registration completed');
     });
 
     test('User_02_Login', async () => {
-        logger.info(`User_02_Login: Click on Logout link at Header`);
-        await header.clickOnLogoutLink();
+        story('2 - Login');
+        description('Test login with existing user');
+        severity(Severity.CRITICAL);
+        logger.info(`----- User_02_Login:`);
 
-        logger.info(`User_02_Login: Click on Login link at Header`);
+        await header.clickOnLogoutLink();
         await header.clickOnLoginLink();
 
-        logger.info(`User_02_Login: Login to system with:
-            - Email: ${userInfo.email} 
-            - Password: ${userInfo.password}`);
-        await loginPage.loginToSystemWithUserInfoInterface(userInfo);
-
-        logger.info(`User_02_Login: Verify that My Account link appeared at Header\n`);
-        const displayed = await header.isMyAccountLinkDisplayed();
-        expect(displayed).toBeTruthy();
+        await loginPage.loginToSystem(userInfo.email, userInfo.password);
+        expect(await header.isMyAccountLinkDisplayed()).toBeTruthy();
     });
 
     test('User_03_MyAccount', async () => {
-        logger.info(`User_03_MyAccount: Click on My Account link at Header`);
+        story('3 - My Account');
+        description('Verify registered user information');
+        severity(Severity.MINOR);
+        logger.info(`----- User_03_MyAccount:`);
+
         await header.clickOnMyAccountLink();
 
-        logger.info(`User_03_MyAccount: Verity that customer information is correctly displayed:
-            - Gender: Male
-            - First Name: ${userInfo.firstName}
-            - Last Name: ${userInfo.lastName}
-            - Company: ${userInfo.company}\n`);
         expect(await customerInfoPage.isGenderMaleSelected()).toBeTruthy();
         expect(await customerInfoPage.getValueInFirstnameTextbox()).toBe(userInfo.firstName);
         expect(await customerInfoPage.getValueInLastnameTextbox()).toBe(userInfo.lastName);
@@ -101,12 +90,12 @@ test.describe.serial('Register_And_Login', () => {
     });
 
     test('User_04_Database_Verification', async () => {
-        logger.info(`User_04_Database_Verification: Verify that customer exists in database`);
+        story('4 - Database Verification');
+        description('Verify registered user exists in database with correct information');
+        severity(Severity.NORMAL);
+        logger.info(`----- User_04_Database_Verification:`);
 
-        const selectQuery = `
-        SELECT [Email],[FirstName],[LastName],[Company] 
-        FROM [nopcommerce].[dbo].[Customer] 
-        WHERE [Email] = '${userInfo.email}'`;
+        const selectQuery = `SELECT [Email],[FirstName],[LastName],[Company] FROM [nopcommerce].[dbo].[Customer] WHERE [Email] = '${userInfo.email}'`;
         const result = await sqlServiceInstance.executeQuery<{
             Email: string,
             FirstName: string,
@@ -115,26 +104,14 @@ test.describe.serial('Register_And_Login', () => {
         }>(selectQuery);
 
         expect(result.recordset.length).toEqual(1);
-
-        logger.info(`User_04_Database_Verification: Verity that customer information in database is correct:
-            - First Name: ${userInfo.firstName}
-            - Last Name: ${userInfo.lastName}
-            - Company: ${userInfo.company}
-            - Email: ${userInfo.email}`);
-
         const dbRecord = result.recordset[0];
         expect(dbRecord.FirstName).toBe(userInfo.firstName);
         expect(dbRecord.LastName).toBe(userInfo.lastName);
         expect(dbRecord.Company).toBe(userInfo.company);
         expect(dbRecord.Email).toBe(userInfo.email);
 
-        logger.info(`User_04_Database_Verification: Delete blank records in database\n`);
-
-        const deleteQuery = `
-        DELETE FROM [nopcommerce].[dbo].[Customer] 
-        WHERE [Email] IS NULL AND [FirstName] IS NULL AND [LastName] IS NULL`;
-
+        const deleteQuery = `DELETE FROM [nopcommerce].[dbo].[Customer] WHERE [Email] IS NULL AND [FirstName] IS NULL AND [LastName] IS NULL`;
         await sqlServiceInstance.executeQuery(deleteQuery);
     });
 
-})
+});

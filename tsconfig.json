@@ -28,6 +28,9 @@
       "@services/*": [
         "services/*"
       ],
+      "@tests/*": [
+        "tests/*"
+      ],
       "@utils/*": [
         "utils/*"
       ]

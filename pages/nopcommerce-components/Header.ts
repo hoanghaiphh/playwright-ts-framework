@@ -1,6 +1,7 @@
 import { Page, Locator } from '@playwright/test';
+import { BasePage } from '@pages/core/BasePage';
 
-export class Header {
+export class Header extends BasePage {
 
     readonly registerLink: Locator;
     readonly loginLink: Locator;
@@ -8,6 +9,7 @@ export class Header {
     readonly myAccountLink: Locator;
 
     constructor(page: Page) {
+        super(page);
         this.registerLink = page.locator('.ico-register');
         this.loginLink = page.locator('.ico-login');
         this.logoutLink = page.locator('.ico-logout');
@@ -15,23 +17,23 @@ export class Header {
     }
 
     async clickOnRegisterLink(): Promise<void> {
-        await this.registerLink.click();
+        await this.clickElement(this.registerLink);
     }
 
     async clickOnLoginLink(): Promise<void> {
-        await this.loginLink.click();
+        await this.clickElement(this.loginLink);
     }
 
     async clickOnLogoutLink(): Promise<void> {
-        await this.logoutLink.click();
+        await this.clickElement(this.logoutLink);
     }
 
     async clickOnMyAccountLink(): Promise<void> {
-        await this.myAccountLink.click();
+        await this.clickElement(this.myAccountLink);
     }
 
     async isMyAccountLinkDisplayed(): Promise<boolean> {
-        return await this.myAccountLink.isVisible();
+        return await this.isVisible(this.myAccountLink);
     }
 
 }

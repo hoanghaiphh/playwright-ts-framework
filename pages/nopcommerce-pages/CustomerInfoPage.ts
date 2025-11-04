@@ -1,6 +1,7 @@
 import { Page, Locator } from '@playwright/test';
+import { BasePage } from '@pages/core/BasePage';
 
-export class CustomerInfoPage {
+export class CustomerInfoPage extends BasePage {
 
     readonly genderMaleRadio: Locator;
     readonly firstNameTextbox: Locator;
@@ -8,6 +9,7 @@ export class CustomerInfoPage {
     readonly companyTextbox: Locator;
 
     constructor(page: Page) {
+        super(page);
         this.genderMaleRadio = page.locator('input#gender-male');
         this.firstNameTextbox = page.locator('input#FirstName');
         this.lastNameTextbox = page.locator('input#LastName');
@@ -15,19 +17,19 @@ export class CustomerInfoPage {
     }
 
     async isGenderMaleSelected(): Promise<boolean> {
-        return await this.genderMaleRadio.isChecked();
+        return await this.isChecked(this.genderMaleRadio);
     }
 
     async getValueInFirstnameTextbox(): Promise<string> {
-        return await this.firstNameTextbox.inputValue();
+        return await this.getInputValue(this.firstNameTextbox);
     }
 
     async getValueInLastnameTextbox(): Promise<string> {
-        return await this.lastNameTextbox.inputValue();
+        return await this.getInputValue(this.lastNameTextbox);
     }
 
     async getValueInCompanyTextbox(): Promise<string> {
-        return await this.companyTextbox.inputValue();
+        return await this.getInputValue(this.companyTextbox);
     }
 
 }

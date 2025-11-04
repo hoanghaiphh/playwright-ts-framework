@@ -1,23 +1,17 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { currentConfig } from '@configs/env.config';
 
-test.describe.serial('Run_On_Multiple_Environments', () => {
+test('Run_On_Multiple_Environments', async ({ page }) => {
 
-    test('Test', async ({ browser }) => {
+    console.log(`App Url: ${currentConfig.appUrl}`);
+    console.log(`App Username: ${currentConfig.appUsername}`);
+    console.log(`App Password: ${currentConfig.appPassword}`);
+    console.log(`Db Server: ${currentConfig.dbServer}`);
+    console.log(`Db Port: ${currentConfig.dbPort}`);
+    console.log(`Db Name: ${currentConfig.dbName}`);
+    console.log(`Db Username: ${currentConfig.dbUsername}`);
+    console.log(`Db Password: ${currentConfig.dbPassword}`);
 
-        console.log(`App Url: ${currentConfig.appUrl}`);
-        console.log(`App Username: ${currentConfig.appUsername}`);
-        console.log(`App Password: ${currentConfig.appPassword}`);
-        console.log(`Db Server: ${currentConfig.dbServer}`);
-        console.log(`Db Port: ${currentConfig.dbPort}`);
-        console.log(`Db Name: ${currentConfig.dbName}`);
-        console.log(`Db Username: ${currentConfig.dbUsername}`);
-        console.log(`Db Password: ${currentConfig.dbPassword}`);
-
-        const page: Page = await browser.newPage();
-        await page.goto('/');
-        await page.waitForTimeout(2000);
-        await page.close();
-    });
-
-})
+    await page.goto('/');
+    await page.waitForTimeout(2000);
+});

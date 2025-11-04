@@ -1,21 +1,15 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { UserFactory } from '@factories/user-factory';
 import { UserInfoInterface } from '@models/user-info.interface';
 
-test.describe.serial('External_Data_Reader', () => {
+test.describe('External_Data_Reader', () => {
 
-    let page: Page;
     let userInfo: UserInfoInterface;
     let userInfoList: UserInfoInterface[];
     let browserName: string;
 
-    test.beforeAll(async ({ browser }, testInfo) => {
-        page = await browser.newPage();
+    test.beforeAll(async ({ }, testInfo) => {
         browserName = testInfo.project.name;
-    });
-
-    test.afterAll(async () => {
-        await page.close();
     });
 
     test('Json_1', async () => {
@@ -64,4 +58,4 @@ test.describe.serial('External_Data_Reader', () => {
         });
     });
 
-})
+});
