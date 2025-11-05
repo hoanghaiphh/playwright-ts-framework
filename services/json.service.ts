@@ -2,32 +2,28 @@ import logger from '@utils/logger';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export class JsonDataService {
+export function loadJsonObject<T>(relativePath: string): T | undefined {
+    const filePath = path.resolve(relativePath);
 
-    public static loadJsonObject<T>(relativePath: string): T | undefined {
-        const filePath = path.resolve(relativePath);
+    try {
+        const fileContents = fs.readFileSync(filePath, 'utf-8');
+        return JSON.parse(fileContents) as T;
 
-        try {
-            const fileContents = fs.readFileSync(filePath, 'utf-8');
-            return JSON.parse(fileContents) as T;
-
-        } catch (error) {
-            logger.error(`ERROR: Failed to load data from ${filePath}`, error);
-            return undefined;
-        }
+    } catch (error) {
+        logger.error(`ERROR: Failed to load data from ${filePath}`, error);
+        return undefined;
     }
+}
 
-    public static loadJsonArray<T>(relativePath: string): T[] {
-        const filePath = path.resolve(relativePath);
+export function loadJsonArray<T>(relativePath: string): T[] {
+    const filePath = path.resolve(relativePath);
 
-        try {
-            const fileContents = fs.readFileSync(filePath, 'utf-8');
-            return JSON.parse(fileContents) as T[];
+    try {
+        const fileContents = fs.readFileSync(filePath, 'utf-8');
+        return JSON.parse(fileContents) as T[];
 
-        } catch (error) {
-            logger.error(`ERROR: Failed to load data from ${filePath}`, error);
-            return [];
-        }
+    } catch (error) {
+        logger.error(`ERROR: Failed to load data from ${filePath}`, error);
+        return [];
     }
-
 }

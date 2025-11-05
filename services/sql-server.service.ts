@@ -23,7 +23,7 @@ const dbConfig: sql.config = {
 export class SqlServerService {
     private connectionPool: sql.ConnectionPool | undefined;
 
-    public async connect(): Promise<void> {
+    async connect(): Promise<void> {
         if (!this.connectionPool) {
             try {
                 this.connectionPool = await new sql.ConnectionPool(dbConfig).connect();
@@ -34,7 +34,7 @@ export class SqlServerService {
         }
     }
 
-    public async disconnect(): Promise<void> {
+    async disconnect(): Promise<void> {
         if (this.connectionPool) {
             try {
                 await this.connectionPool.close();
@@ -46,7 +46,7 @@ export class SqlServerService {
         }
     }
 
-    public async executeQuery<T>(query: string): Promise<sql.IResult<T>> {
+    async executeQuery<T>(query: string): Promise<sql.IResult<T>> {
         if (!this.connectionPool) {
             logger.error('Database connection has not been initialized');
             throw new Error('Database connection has not been initialized');
@@ -59,7 +59,7 @@ export class SqlServerService {
                 : result.recordset
                     ? result.recordset.length
                     : 0;
-            logger.info(`Successfully executed query: ${query}. Rows affected/returned: ${rowCount}`);
+            logger.info(`Successfully executed query: ${query} - Rows affected/returned: ${rowCount}`);
             return result;
         } catch (error) {
             logger.error(`Failed to execute query: ${query}`, error);
@@ -67,7 +67,7 @@ export class SqlServerService {
         }
     }
 
-    public async executeParameterizedQuery<T>(
+    async executeParameterizedQuery<T>(
         query: string, parameters: { name: string, type: sql.ISqlType, value: any }[]): Promise<sql.IResult<T>> {
 
         if (!this.connectionPool) {
@@ -84,7 +84,7 @@ export class SqlServerService {
                 : result.recordset
                     ? result.recordset.length
                     : 0;
-            logger.info(`Successfully executed parameterized query: ${query} with ${parameters.length} parameters. Rows affected/returned: ${rowCount}`);
+            logger.info(`Successfully executed parameterized query: ${query} with ${parameters.length} parameters - Rows affected/returned: ${rowCount}`);
             return result;
         } catch (error) {
             logger.error(`Failed to execute parameterized query: ${query}`, error);

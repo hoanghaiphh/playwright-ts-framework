@@ -19,9 +19,6 @@
       "@factories/*": [
         "factories/*"
       ],
-      "@models/*": [
-        "models/*"
-      ],
       "@pages/*": [
         "pages/*"
       ],
@@ -43,7 +40,6 @@
   "include": [
     "configs",
     "factories",
-    "models",
     "pages",
     "services",
     "tests",

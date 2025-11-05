@@ -1,11 +1,11 @@
 import { test } from '@playwright/test';
-import { UserFactory } from '@factories/user-factory';
-import { UserInfoInterface } from '@models/user-info.interface';
+import { getUserFromJson1, getAllUsersFromJson2, getAllUsersFromJson3, getAllUsersFromExcel } from '@factories/user.factory';
+import { UserInterface } from '@factories/user.interface';
 
 test.describe('External_Data_Reader', () => {
 
-    let userInfo: UserInfoInterface;
-    let userInfoList: UserInfoInterface[];
+    let userInfo: UserInterface;
+    let userInfoList: UserInterface[];
     let browserName: string;
 
     test.beforeAll(async ({ }, testInfo) => {
@@ -13,7 +13,7 @@ test.describe('External_Data_Reader', () => {
     });
 
     test('Json_1', async () => {
-        userInfo = UserFactory.getUserFromJson1();
+        userInfo = getUserFromJson1();
 
         console.log(`First Name: ${userInfo.firstName}`);
         console.log(`Last Name: ${userInfo.lastName}`);
@@ -23,7 +23,7 @@ test.describe('External_Data_Reader', () => {
     });
 
     test('Json_2', async () => {
-        userInfoList = UserFactory.getAllUsersFromJson2(browserName);
+        userInfoList = getAllUsersFromJson2(browserName);
 
         userInfoList.forEach(user => {
             console.log(`First Name: ${user.firstName}`)
@@ -35,7 +35,7 @@ test.describe('External_Data_Reader', () => {
     });
 
     test('Json_3', async () => {
-        userInfoList = UserFactory.getAllUsersFromJson3(browserName);
+        userInfoList = getAllUsersFromJson3(browserName);
 
         userInfoList.forEach(user => {
             console.log(`First Name: ${user.firstName}`)
@@ -47,7 +47,7 @@ test.describe('External_Data_Reader', () => {
     });
 
     test('Excel', async () => {
-        userInfoList = await UserFactory.getAllUsersFromExcel();
+        userInfoList = await getAllUsersFromExcel();
 
         userInfoList.forEach(user => {
             console.log(`First Name: ${user.firstName}`)

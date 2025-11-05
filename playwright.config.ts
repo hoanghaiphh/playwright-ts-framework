@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: [
     ['html'],
     ['line'],
-    ['allure-playwright', { resultsDir: 'allure-results', suitesTitle: true, }]
+    ['allure-playwright', { resultsDir: 'allure-results', suitesTitle: true, detail: false }]
   ],
 
   use: {
