@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from '@pages/core/BasePage';
+import { BasePage } from '@pages/base/BasePage';
 
 export class CustomerInfoPage extends BasePage {
 
@@ -10,6 +10,7 @@ export class CustomerInfoPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
+
         this.genderMaleRadio = page.locator('input#gender-male');
         this.firstNameTextbox = page.locator('input#FirstName');
         this.lastNameTextbox = page.locator('input#LastName');

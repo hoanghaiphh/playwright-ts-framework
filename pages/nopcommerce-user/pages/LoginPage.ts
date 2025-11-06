@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from '@pages/core/BasePage';
+import { BasePage } from '@pages/base/BasePage';
 
 export class LoginPage extends BasePage {
 
@@ -9,6 +9,7 @@ export class LoginPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
+
         this.emailTextbox = page.locator('input#Email');
         this.passwordTextbox = page.locator('input#Password');
         this.loginButton = page.locator('button.button-1.login-button');

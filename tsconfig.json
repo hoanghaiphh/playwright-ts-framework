@@ -16,6 +16,9 @@
       "@configs/*": [
         "configs/*"
       ],
+      "@data-access/*": [
+        "data-access/*"
+      ],
       "@factories/*": [
         "factories/*"
       ],
@@ -39,6 +42,7 @@
   },
   "include": [
     "configs",
+    "data-access",
     "factories",
     "pages",
     "services",

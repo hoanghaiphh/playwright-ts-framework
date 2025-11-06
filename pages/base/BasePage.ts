@@ -25,7 +25,7 @@ export class BasePage {
         });
     }
 
-    protected async gotoPage(url: string, options?: { timeout?: number }): Promise<void> {
+    async gotoPage(url: string, options?: { timeout?: number }): Promise<void> {
         const stepTitle = `Navigate to URL: ${url}`;
         await this.runStep(stepTitle, async () => {
             await this.page.goto(url, { timeout: options?.timeout });

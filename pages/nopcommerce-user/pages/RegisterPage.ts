@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test'
-import { BasePage } from '@pages/core/BasePage';
+import { BasePage } from '@pages/base/BasePage';
 
 export class RegisterPage extends BasePage {
 
@@ -15,6 +15,7 @@ export class RegisterPage extends BasePage {
 
     constructor(page: Page) {
         super(page);
+
         this.genderMaleRadio = page.locator('input#gender-male');
         this.firstNameTextbox = page.locator('input#FirstName');
         this.lastNameTextbox = page.locator('input#LastName');
@@ -26,8 +27,9 @@ export class RegisterPage extends BasePage {
         this.successMessage = page.locator('.result');
     }
 
-    async addUserInfo(
-        firstName: string, lastName: string, company: string, email: string, password: string): Promise<void> {
+    async addUserInfo(firstName: string, lastName: string, company: string, email: string, password: string)
+        : Promise<void> {
+
         await this.checkRadioButton(this.genderMaleRadio);
         await this.fillText(this.firstNameTextbox, firstName);
         await this.fillText(this.lastNameTextbox, lastName);

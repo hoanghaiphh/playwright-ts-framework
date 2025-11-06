@@ -1,5 +1,5 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from '@pages/core/BasePage';
+import { BasePage } from '@pages/base/BasePage';
 
 export class Header extends BasePage {
 
@@ -10,6 +10,7 @@ export class Header extends BasePage {
 
     constructor(page: Page) {
         super(page);
+
         this.registerLink = page.locator('.ico-register');
         this.loginLink = page.locator('.ico-login');
         this.logoutLink = page.locator('.ico-logout');
