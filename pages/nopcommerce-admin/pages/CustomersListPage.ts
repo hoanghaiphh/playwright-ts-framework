@@ -10,6 +10,11 @@ export class CustomersListPage extends BasePage {
     readonly gridInfo: Locator;
     readonly addNewButton: Locator;
 
+    readonly addSuccessMsg: string;
+    readonly deleteSuccessMsg: string;
+    readonly gridInfo1Result: string;
+    readonly gridInfo0Result: string;
+
     constructor(page: Page) {
         super(page);
 
@@ -19,6 +24,11 @@ export class CustomersListPage extends BasePage {
         this.successMessage = page.locator('div.alert-success');
         this.gridInfo = page.locator('div#customers-grid_info');
         this.addNewButton = page.locator("//a[contains(string(), 'Add new')]");
+
+        this.addSuccessMsg = 'The new customer has been added successfully.';
+        this.deleteSuccessMsg = 'The customer has been deleted successfully.';
+        this.gridInfo1Result = '1-1 of 1 items';
+        this.gridInfo0Result = 'No records';
     }
 
     async searchCustomerByEmail(email: string): Promise<void> {

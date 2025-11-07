@@ -13,6 +13,8 @@ export class RegisterPage extends BasePage {
     readonly registerButton: Locator;
     readonly successMessage: Locator;
 
+    readonly registerSuccessMsg: string;
+
     constructor(page: Page) {
         super(page);
 
@@ -25,6 +27,8 @@ export class RegisterPage extends BasePage {
         this.confirmPasswordTextbox = page.locator('input#ConfirmPassword');
         this.registerButton = page.locator('#register-button');
         this.successMessage = page.locator('.result');
+
+        this.registerSuccessMsg = 'Your registration completed';
     }
 
     async addUserInfo(firstName: string, lastName: string, company: string, email: string, password: string)

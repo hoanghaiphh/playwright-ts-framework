@@ -1,17 +1,37 @@
-import { Browser, Page, TestInfo } from '@playwright/test';
+import { test as base, Browser, Page, TestInfo } from '@playwright/test';
 import { BasePage } from '@pages/base/BasePage';
+import { Header } from '@pages/nopcommerce-user/components/Header';
+import { Ajax } from '@pages/nopcommerce-admin/components/Ajax';
 import sqlServiceInstance from '@services/sql-server.service';
 import logger, { initializeRunLogger, cleanupRunLogger } from '@utils/logger';
 import * as allure from 'allure-js-commons';
 import { Severity } from 'allure-js-commons';
 export { Severity };
 
-const pomCache = new Map<any, any>();
+const pomCache = new Map<new (page: Page) => BasePage, BasePage>();
+
 let pageInstance: Page | undefined = undefined;
 
-export async function baseBeforeAll(
-    { browser, baseURL }: { browser: Browser, baseURL: string | undefined }, testInfo: TestInfo)
-    : Promise<void> {
+type PageClassArray = Array<new (page: Page) => BasePage>;
+
+type CommonFixtures = {
+    header: Header;
+    ajax: Ajax;
+}
+
+export const test = base.extend<CommonFixtures>({
+    header: async ({ browserName }, use) => {
+        const headerInstance = getPage(Header);
+        await use(headerInstance);
+    },
+    ajax: async ({ browserName }, use) => {
+        const ajaxInstance = getPage(Ajax);
+        await use(ajaxInstance);
+    },
+})
+
+export async function setupSuite({ browser, baseURL }: { browser: Browser, baseURL: string | undefined },
+    testInfo: TestInfo, componentsToInitialize: PageClassArray = []): Promise<void> {
 
     if (!baseURL) {
         throw new Error("Fatal Error: 'baseURL' is undefined.");
@@ -29,9 +49,13 @@ export async function baseBeforeAll(
     await page.goto(baseURL);
     pageInstance = page;
     pomCache.clear();
+
+    for (const ComponentClass of componentsToInitialize) {
+        getPage(ComponentClass);
+    }
 }
 
-export async function baseAfterAll(): Promise<void> {
+export async function teardownSuite(): Promise<void> {
     if (pageInstance) {
         await pageInstance.close();
         pageInstance = undefined;
@@ -46,7 +70,7 @@ export async function baseAfterAll(): Promise<void> {
     cleanupRunLogger();
 }
 
-export function baseBeforeTest(
+export function initializeTest(
     feature: string, story: string, severity: Severity = Severity.NORMAL, description?: string): void {
 
     allure.feature(feature);
