@@ -1,7 +1,11 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from '@pages/base/BasePage';
+import { Ajax } from '../components/Ajax';
+import { getPage } from '@tests/helpers/base-test';
 
 export class AddCustomerPage extends BasePage {
+
+    readonly ajax: Ajax;
 
     readonly emailTextbox: Locator;
     readonly passwordTextbox: Locator;
@@ -14,6 +18,8 @@ export class AddCustomerPage extends BasePage {
     constructor(page: Page) {
         super(page);
 
+        this.ajax = getPage(Ajax);
+
         this.emailTextbox = page.locator('input#Email');
         this.passwordTextbox = page.locator('input#Password');
         this.firstNameTextbox = page.locator('input#FirstName');
@@ -23,8 +29,10 @@ export class AddCustomerPage extends BasePage {
         this.saveButton = page.locator("button[name='save']");
     }
 
-    async addUserInfo(firstName: string, lastName: string, company: string, email: string, password: string)
+    async addNewUser(firstName: string, lastName: string, company: string, email: string, password: string)
         : Promise<void> {
+
+        await this.ajax.waitForLoading();
 
         await this.fillText(this.emailTextbox, email);
         await this.fillText(this.passwordTextbox, password);
@@ -32,9 +40,7 @@ export class AddCustomerPage extends BasePage {
         await this.fillText(this.lastNameTextbox, lastName);
         await this.checkRadioButton(this.genderFemaleRadio);
         await this.fillText(this.companyTextbox, company);
-    }
 
-    async clickOnSaveButton(): Promise<void> {
         await this.clickElement(this.saveButton);
     }
 

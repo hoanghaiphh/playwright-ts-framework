@@ -1,7 +1,11 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from '@pages/base/BasePage';
+import { Ajax } from '../components/Ajax';
+import { getPage } from '@tests/helpers/base-test';
 
 export class CustomersListPage extends BasePage {
+
+    readonly ajax: Ajax;
 
     readonly searchEmailTextbox: Locator;
     readonly searchButton: Locator;
@@ -18,6 +22,8 @@ export class CustomersListPage extends BasePage {
     constructor(page: Page) {
         super(page);
 
+        this.ajax = getPage(Ajax);
+
         this.searchEmailTextbox = page.locator('input#SearchEmail');
         this.searchButton = page.locator('button#search-customers');
         this.editButton = page.locator('table#customers-grid td.button-column>a');
@@ -32,23 +38,28 @@ export class CustomersListPage extends BasePage {
     }
 
     async searchCustomerByEmail(email: string): Promise<void> {
+        await this.ajax.waitForLoading();
         await this.fillText(this.searchEmailTextbox, email);
         await this.clickElement(this.searchButton);
     }
 
     async clickOnEditButton(): Promise<void> {
+        await this.ajax.waitForLoading();
         await this.clickElement(this.editButton);
     }
 
     async getSuccessMessage(): Promise<string> {
+        await this.ajax.waitForLoading();
         return await this.getCleanText(this.successMessage);
     }
 
     async getGridInfo(): Promise<string> {
+        await this.ajax.waitForLoading();
         return await this.getCleanText(this.gridInfo);
     }
 
     async clickOnAddNewButton(): Promise<void> {
+        await this.ajax.waitForLoading();
         await this.clickElement(this.addNewButton);
     }
 

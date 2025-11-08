@@ -4,12 +4,12 @@ import logger from '@utils/logger';
 const typedExpect: any = expect;
 
 async function assertStep(stepTitle: string, assertionCallback: () => void): Promise<void> {
+    logger.info(stepTitle);
     await test.step(stepTitle, async () => {
         try {
             assertionCallback();
-            logger.info(stepTitle);
         } catch (error) {
-            logger.error(`${stepTitle} - FAILED: ${error}`);
+            logger.error(error);
             throw error;
         }
     })

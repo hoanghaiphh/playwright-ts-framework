@@ -1,7 +1,6 @@
 import { test as base, Browser, Page, TestInfo } from '@playwright/test';
 import { BasePage } from '@pages/base/BasePage';
 import { Header } from '@pages/nopcommerce-user/components/Header';
-import { Ajax } from '@pages/nopcommerce-admin/components/Ajax';
 import sqlServiceInstance from '@services/sql-server.service';
 import logger, { initializeRunLogger, cleanupRunLogger } from '@utils/logger';
 import * as allure from 'allure-js-commons';
@@ -16,17 +15,12 @@ type PageClassArray = Array<new (page: Page) => BasePage>;
 
 type CommonFixtures = {
     header: Header;
-    ajax: Ajax;
 }
 
 export const test = base.extend<CommonFixtures>({
     header: async ({ browserName }, use) => {
         const headerInstance = getPage(Header);
         await use(headerInstance);
-    },
-    ajax: async ({ browserName }, use) => {
-        const ajaxInstance = getPage(Ajax);
-        await use(ajaxInstance);
     },
 })
 

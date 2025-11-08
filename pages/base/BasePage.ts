@@ -12,14 +12,18 @@ export class BasePage {
         await locator.waitFor({ state: 'visible', timeout: timeout });
     }
 
+    protected async waitForHidden(locator: Locator, timeout: number = 15000): Promise<void> {
+        await locator.waitFor({ state: 'hidden', timeout: timeout });
+    }
+
     protected async runStep<T>(stepTitle: string, actionCallback: () => Promise<T>): Promise<T> {
+        logger.info(stepTitle);
         return await test.step(stepTitle, async () => {
             try {
                 const result = await actionCallback();
-                logger.info(stepTitle);
                 return result;
             } catch (error) {
-                logger.error(`${stepTitle} - FAILED: ${error}`);
+                logger.error(error);
                 throw error;
             }
         });
@@ -30,13 +34,6 @@ export class BasePage {
         await this.runStep(stepTitle, async () => {
             await this.page.goto(url, { timeout: options?.timeout });
             await this.page.waitForLoadState('networkidle');
-        });
-    }
-
-    protected async waitForHidden(locator: Locator, timeout: number = 15000): Promise<void> {
-        const stepTitle = `Wait for ${locator} become hidden within ${timeout}ms`;
-        await this.runStep(stepTitle, async () => {
-            await locator.waitFor({ state: 'hidden', timeout: timeout });
         });
     }
 
