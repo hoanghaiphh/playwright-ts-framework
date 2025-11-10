@@ -1,3 +1,4 @@
+import { test } from '@playwright/test';
 import sqlServiceInstance from '@services/sql-server.service';
 import * as sql from 'mssql';
 
@@ -13,21 +14,24 @@ export class UserRepository {
     async getUserFromDatabaseByEmail(email: string): Promise<UserRecord | null> {
         const query =
             `SELECT [Email],[FirstName],[LastName],[Company] FROM [nopcommerce].[dbo].[Customer] WHERE [Email] = @email`;
-
         const parameters = [
             { name: 'email', type: sql.NVarChar(255), value: email }
         ];
 
-        const result = await sqlServiceInstance.executeParameterizedQuery<UserRecord>(query, parameters);
+        let result;
+        await test.step(`Executed query: ${query} (${email})`, async () => {
+            result = await sqlServiceInstance.executeParameterizedQuery<UserRecord>(query, parameters);
+        });
 
-        switch (result.recordset.length) {
+        const recordSetLength = result!.recordset.length;
+        switch (recordSetLength) {
             case 0: return null;
-            case 1: return result.recordset[0];
-            default: throw new Error(`Logic Error: Found ${result.recordset.length} results for unique email query.`);
+            case 1: return result!.recordset[0];
+            default: throw new Error(`Logic Error: Found ${recordSetLength} results for unique email query.`);
         };
     }
 
-    mapToUserRecord(email: string, firstName: string, lastName: string, company: string): UserRecord {
+    mapUser(email: string, firstName: string, lastName: string, company: string): UserRecord {
         return {
             Email: email,
             FirstName: firstName,

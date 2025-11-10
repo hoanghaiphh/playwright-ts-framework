@@ -28,7 +28,7 @@ export class SqlServerService {
         if (!this.connectionPool) {
             try {
                 this.connectionPool = await new sql.ConnectionPool(dbConfig).connect();
-                logger.info(`Successfully connect to SQL server ${dbConfig.database} at ${dbConfig.server}:${dbConfig.port}`);
+                logger.info(`Connected to SQL server ${dbConfig.database} at ${dbConfig.server}:${dbConfig.port}`);
             } catch (error) {
                 logger.error('Failed to initialize database connection: ', error);
                 throw error;
@@ -41,7 +41,7 @@ export class SqlServerService {
             try {
                 await this.connectionPool.close();
                 this.connectionPool = undefined;
-                logger.info('Database connection closed\n');
+                logger.info('Database connection closed.');
             } catch (error) {
                 logger.error('Failed to close database connection: ', error);
                 throw error;
@@ -60,7 +60,10 @@ export class SqlServerService {
                     ? result.recordset.length
                     : 0;
 
-            logger.info(`Successfully executed query: ${query} - Rows affected/returned: ${rowCount}`);
+            logger.info(`Executed:
+            - Query: ${query}
+            - Rows affected/returned: ${rowCount}`);
+
             return result;
         } catch (error) {
             logger.error(`Failed to execute query: ${query}`, error);
@@ -84,7 +87,11 @@ export class SqlServerService {
                     ? result.recordset.length
                     : 0;
 
-            logger.info(`Successfully executed parameterized query: ${query} with ${parameters.length} parameters - Rows affected/returned: ${rowCount}`);
+            logger.info(`Executed:
+            - Query: ${query}
+            - Parameters: ${JSON.stringify(parameters)}
+            - Rows affected/returned: ${rowCount}`);
+
             return result;
         } catch (error) {
             logger.error(`Failed to execute parameterized query: ${query}`, error);

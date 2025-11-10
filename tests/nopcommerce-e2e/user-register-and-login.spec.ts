@@ -1,5 +1,5 @@
 import { test, setupSuite, teardownSuite, initializeTest, Severity, getPage } from '@tests/helpers/base-test';
-import { expectToContain, expectTrue, expectToBe, expectToEqual } from '@tests/helpers/custom-expect';
+import { expectToContain, expectTrue, expectToBe, expectToEqual, expectFalse } from '@tests/helpers/custom-expect';
 
 import { Header } from '@pages/nopcommerce-user/components/Header';
 import { RegisterPage } from '@pages/nopcommerce-user/pages/RegisterPage';
@@ -29,7 +29,7 @@ test.describe.serial('User_Register_And_Login', () => {
     })
 
 
-    test('USER 01 - REGISTER', async ({ header }, testInfo) => {
+    test('USER 01 REGISTER', async ({ header }, testInfo) => {
         initializeTest(feature, testInfo.title, Severity.NORMAL, 'Test registration with valid data');
 
         await header.clickOnRegisterLink();
@@ -42,7 +42,7 @@ test.describe.serial('User_Register_And_Login', () => {
         expectToContain(await registerPage.getRegisterSuccessMessage(), registerPage.registerSuccessMsg);
     })
 
-    test('USER 02 - LOGIN', async ({ header }, testInfo) => {
+    test('USER 02 LOGIN', async ({ header }, testInfo) => {
         initializeTest(feature, testInfo.title, Severity.CRITICAL, 'Test login with existing user');
 
         await header.clickOnLogoutLink();
@@ -54,27 +54,19 @@ test.describe.serial('User_Register_And_Login', () => {
         expectTrue(await header.isMyAccountLinkDisplayed());
     })
 
-    test('USER 03 - MY ACCOUNT', async ({ header }, testInfo) => {
+    test('USER 03 MY_ACCOUNT', async ({ header }, testInfo) => {
         initializeTest(feature, testInfo.title, Severity.MINOR, 'Verify registered user information');
 
         await header.clickOnMyAccountLink();
 
         customerInfoPage = getPage(CustomerInfoPage);
-        expectTrue(await customerInfoPage.isGenderMaleSelected());
-        expectToBe(await customerInfoPage.getValueInFirstnameTextbox(), user.firstName);
-        expectToBe(await customerInfoPage.getValueInLastnameTextbox(), user.lastName);
-        expectToBe(await customerInfoPage.getValueInCompanyTextbox(), user.company);
-    })
+        expectFalse(await customerInfoPage.isGenderMaleSelected(), true); // fail
+        expectToBe(await customerInfoPage.getValueInFirstnameTextbox(), user.firstName, true);
+        expectToBe(await customerInfoPage.getValueInLastnameTextbox(), 'user.lastName', true); // fail
+        expectToBe(await customerInfoPage.getValueInCompanyTextbox(), user.company, true);
 
-    test('USER 04 - DATABASE VERIFICATION', async ({ }, testInfo) => {
-        initializeTest(feature, testInfo.title, Severity.NORMAL,
-            'Verify registered user exists in database with correct information');
-
-        await test.step(`Get user from database by email ${user.email} and verify information`, async () => {
-            const actual = await userRepository.getUserFromDatabaseByEmail(user.email);
-            const expected = userRepository.mapToUserRecord(user.email, user.firstName, user.lastName, user.company);
-            expectToEqual(actual, expected);
-        })
+        expectToEqual(await userRepository.getUserFromDatabaseByEmail(user.email),
+            userRepository.mapUser(user.email, user.firstName, user.lastName, user.company), true);
     })
 
 })

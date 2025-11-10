@@ -2,7 +2,7 @@ import { test as base, Browser, Page, TestInfo } from '@playwright/test';
 import { BasePage } from '@pages/base/BasePage';
 import { Header } from '@pages/nopcommerce-user/components/Header';
 import sqlServiceInstance from '@services/sql-server.service';
-import logger, { initializeRunLogger, cleanupRunLogger } from '@utils/logger';
+import logger, { initializeRunLogger, cleanupRunLogger, setCurrentTestTitle } from '@utils/logger';
 import * as allure from 'allure-js-commons';
 import { Severity } from 'allure-js-commons';
 export { Severity };
@@ -31,13 +31,13 @@ export async function setupSuite({ browser, baseURL }: { browser: Browser, baseU
         throw new Error("Fatal Error: 'baseURL' is undefined.");
     }
 
-    const suiteName = testInfo.titlePath[1].toUpperCase();
-    const browserName = testInfo.project.name.toUpperCase();
+    const startLog =
+        `Starting Test Suite: ${testInfo.titlePath[1].toUpperCase()} | Browser: ${testInfo.project.name.toUpperCase()}`;
+    const startLogBorder = '='.repeat(startLog.length);
     initializeRunLogger(testInfo);
-
-    logger.info(`=========================================================================`);
-    logger.info(`Starting Test Suite: ${suiteName} | Browser: ${browserName}`);
-    logger.info(`=========================================================================\n`);
+    logger.info(startLogBorder);
+    logger.info(startLog);
+    logger.info(startLogBorder + `\n`);
 
     const page = await browser.newPage();
     await page.goto(baseURL);
@@ -50,6 +50,9 @@ export async function setupSuite({ browser, baseURL }: { browser: Browser, baseU
 }
 
 export async function teardownSuite(): Promise<void> {
+    setCurrentTestTitle('');
+    logger.info('-'.repeat(50));
+
     if (pageInstance) {
         await pageInstance.close();
         pageInstance = undefined;
@@ -58,9 +61,7 @@ export async function teardownSuite(): Promise<void> {
 
     await sqlServiceInstance.disconnect();
 
-    logger.info(`=====================================`);
-    logger.info(`Test Execution Completed Successfully`);
-    logger.info(`=====================================\n`);
+    logger.info(`Test execution completed successfully.\n`);
     cleanupRunLogger();
 }
 
@@ -71,7 +72,9 @@ export function initializeTest(
     allure.story(story);
     allure.severity(severity);
     if (description) allure.description(description);
-    logger.info(story);
+
+    setCurrentTestTitle(story);
+    logger.info('');
 }
 
 export function getPage<T extends BasePage>(PageClass: new (page: Page) => T): T {

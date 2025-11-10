@@ -5,9 +5,11 @@ const { combine, timestamp, label, printf, colorize } = format;
 const DailyRotateFile = (transports as any).DailyRotateFile;
 
 let currentRunID: string = '';
+let currentTestTitle: string = '';
 
 const logFormat = printf(({ level, message, label, timestamp }) => {
-    return `${timestamp} [${label}] ${level}: ${message}`;
+    const finalLabel = currentTestTitle ? `${label} | ${currentTestTitle}` : label;
+    return `${timestamp} [${finalLabel}] ${level}: ${message}`;
 });
 
 const combinedRotateTransport = new DailyRotateFile({
@@ -29,7 +31,7 @@ const errorRotateTransport = new DailyRotateFile({
 const logger: Logger = createLogger({
     level: 'debug',
     format: combine(
-        label({ label: 'TEST' }),
+        label({ label: 'TESTING' }),
         timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         logFormat
     ),
@@ -77,6 +79,10 @@ export function cleanupRunLogger(): void {
             currentRunID = '';
         }
     }
+}
+
+export function setCurrentTestTitle(title: string): void {
+    currentTestTitle = title;
 }
 
 export default logger;

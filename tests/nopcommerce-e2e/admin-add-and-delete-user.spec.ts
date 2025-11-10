@@ -31,7 +31,7 @@ test.describe.serial('Admin_Add_And_Delete_User', () => {
     })
 
 
-    test('ADMIN 01 - ADMIN LOGIN', async ({ header }, testInfo) => {
+    test('ADMIN 01 ADMIN_LOGIN', async ({ header }, testInfo) => {
         initializeTest(feature, testInfo.title, Severity.CRITICAL);
 
         await header.clickOnLoginLink();
@@ -42,7 +42,7 @@ test.describe.serial('Admin_Add_And_Delete_User', () => {
         expectTrue(await header.isMyAccountLinkDisplayed());
     })
 
-    test('ADMIN 02 - ADD NEW USER', async ({ baseURL }, testInfo) => {
+    test('ADMIN 02 ADD_NEW_USER', async ({ baseURL }, testInfo) => {
         initializeTest(feature, testInfo.title);
 
         await getPage(HomePage).gotoPage(`${baseURL}/Admin/Customer/Create`);
@@ -55,7 +55,7 @@ test.describe.serial('Admin_Add_And_Delete_User', () => {
         expectToContain(await customersListPage.getSuccessMessage(), customersListPage.addSuccessMsg);
     })
 
-    test('ADMIN 03 - DELETE USER', async ({ }, testInfo) => {
+    test('ADMIN 03 DELETE_USER', async ({ }, testInfo) => {
         initializeTest(feature, testInfo.title);
 
         await customersListPage.searchCustomerByEmail(user.email);
