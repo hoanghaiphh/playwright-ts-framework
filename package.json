@@ -11,6 +11,9 @@
     "test:prepare": "npm run log:clean:runs ; npm run report:clean",
     "test:run": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test",
     "test:run:oneworker": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --workers=1",
+    "test:run:firefox": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --project=firefox",
+    "test:run:chrome": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --project=chrome",
+    "test:run:edge": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --project=edge",
     "allure:serve": "ts-node utils/write-allure-env.ts ; allure serve allure-results"
   },
   "keywords": [],

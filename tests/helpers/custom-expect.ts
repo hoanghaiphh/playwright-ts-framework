@@ -9,10 +9,15 @@ async function assertStep(stepTitle: string,
     logger.info(stepTitle);
     await test.step(stepTitle, async () => {
         try {
+            const beforeErr = test.info().errors.length;
             assertionCallback();
+            if (isSoft) {
+                const afterErr = test.info().errors.length;
+                if (afterErr > beforeErr) logger.error('Soft Assertion Failed !!!');
+            };
         } catch (error) {
             logger.error(error);
-            if (!isSoft) throw error;
+            throw error;
         }
     })
 }

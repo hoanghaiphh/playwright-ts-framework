@@ -51,7 +51,7 @@ export async function setupSuite({ browser, baseURL }: { browser: Browser, baseU
 
 export async function teardownSuite(): Promise<void> {
     setCurrentTestTitle('');
-    logger.info('-'.repeat(50));
+    logger.info('***');
 
     if (pageInstance) {
         await pageInstance.close();
@@ -74,7 +74,7 @@ export function initializeTest(
     if (description) allure.description(description);
 
     setCurrentTestTitle(story);
-    logger.info('');
+    logger.info('*');
 }
 
 export function getPage<T extends BasePage>(PageClass: new (page: Page) => T): T {
