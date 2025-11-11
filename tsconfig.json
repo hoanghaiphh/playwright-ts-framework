@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ES2022",
     "module": "commonjs",
     "lib": [
-      "ES2020",
+      "ES2022",
       "DOM"
     ],
     "strict": true,
@@ -13,9 +13,6 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@configs/*": [
-        "configs/*"
-      ],
       "@data-access/*": [
         "data-access/*"
       ],
@@ -41,7 +38,6 @@
     ]
   },
   "include": [
-    "configs",
     "data-access",
     "factories",
     "pages",
@@ -49,5 +45,6 @@
     "tests",
     "utils",
     "playwright.config.ts",
+    "env.config.ts",
   ]
 }

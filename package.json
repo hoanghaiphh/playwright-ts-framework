@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "tsc": "tsc --noEmit",
     "log:clean": "rimraf logs",
     "log:clean:combined": "rimraf logs/combined",
     "log:clean:error": "rimraf logs/error",

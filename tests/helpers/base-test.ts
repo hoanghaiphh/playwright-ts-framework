@@ -7,7 +7,7 @@ import * as allure from 'allure-js-commons';
 import { Severity } from 'allure-js-commons';
 export { Severity };
 
-const pomCache = new Map<new (page: Page) => BasePage, BasePage>();
+const pomCache = new Map<(new (page: Page) => BasePage), BasePage>();
 
 let pageInstance: Page | undefined = undefined;
 
@@ -18,7 +18,7 @@ type CommonFixtures = {
 }
 
 export const test = base.extend<CommonFixtures>({
-    header: async ({ browserName }, use) => {
+    header: async ({ }, use) => {
         const headerInstance = getPage(Header);
         await use(headerInstance);
     },

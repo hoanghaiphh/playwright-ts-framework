@@ -10,7 +10,7 @@ import { CustomerDetailsPage } from '@pages/nopcommerce-admin/pages/CustomerDeta
 
 import { UserInterface } from '@factories/user.interface';
 import { getAllUsersFromJson3 } from '@factories/user.factory';
-import { currentConfig } from '@configs/env.config';
+import { currentConfig } from '../../env.config';
 
 
 test.describe.serial('Admin_Add_And_Delete_User', () => {
