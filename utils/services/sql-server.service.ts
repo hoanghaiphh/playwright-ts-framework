@@ -1,4 +1,4 @@
-import { currentConfig } from '../env.config';
+import { currentConfig } from '@env';
 import logger from '@utils/logger';
 import * as sql from 'mssql';
 

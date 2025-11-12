@@ -6,7 +6,7 @@ import { createUniqueEmail } from '@utils/common';
 import logger from '@utils/logger';
 
 export function getUserFromJson1(): UserInterface {
-    const relativePath = 'test-data/user-info/user-info-1.json';
+    const relativePath = 'tests/data/user-info-1.json';
     const rawUserObject = loadJsonObject<Json1>(relativePath);
 
     if (rawUserObject === undefined) throw new Error("JSON data null");
@@ -21,7 +21,7 @@ export function getUserFromJson1(): UserInterface {
 }
 
 export function getAllUsersFromJson2(browserName: string): UserInterface[] {
-    const relativePath = 'test-data/user-info/user-info-2.json';
+    const relativePath = 'tests/data/user-info-2.json';
     const rawDataObject = loadJsonObject<Json2>(relativePath);
 
     if (rawDataObject === undefined) throw new Error("JSON data null");
@@ -38,7 +38,7 @@ export function getAllUsersFromJson2(browserName: string): UserInterface[] {
 }
 
 export function getAllUsersFromJson3(browserName: string): UserInterface[] {
-    const relativePath = 'test-data/user-info/user-info-3.json';
+    const relativePath = 'tests/data/user-info-3.json';
     const rawUsersArray = loadJsonArray<Json3>(relativePath);
 
     return rawUsersArray.map(rawUser => ({
@@ -51,7 +51,7 @@ export function getAllUsersFromJson3(browserName: string): UserInterface[] {
 }
 
 export async function getAllUsersFromExcel(sheetName?: string): Promise<UserInterface[]> {
-    const relativePath = 'test-data/user-info/user-info.xlsx';
+    const relativePath = 'tests/data/user-info.xlsx';
     const rawUsersArray: DataRow[] = await readExcelFile(relativePath, sheetName);
 
     if (rawUsersArray.length === 0) {

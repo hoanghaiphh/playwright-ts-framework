@@ -1,7 +1,7 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from '@pages/base/BasePage';
+import { BasePage } from '@BasePage';
 import { Ajax } from '../components/Ajax';
-import { getPage } from '@tests/helpers/base-test';
+import { getPage } from '@base-test';
 
 export class CustomersListPage extends BasePage {
 

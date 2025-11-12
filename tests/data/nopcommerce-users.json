@@ -1,0 +1,26 @@
+{
+    "edge": {
+        "email": "playwright.edge@nopcommerce.com",
+        "password": "Abcd@1234",
+        "firstName": "Edge",
+        "lastName": "Playwright",
+        "company": "Automation FC",
+        "gender": "Male"
+    },
+    "chrome": {
+        "email": "playwright.chrome@nopcommerce.com",
+        "password": "Abcd@1234",
+        "firstName": "Chrome",
+        "lastName": "Playwright",
+        "company": "Automation FC",
+        "gender": "Male"
+    },
+    "firefox": {
+        "email": "playwright.firefox@nopcommerce.com",
+        "password": "Abcd@1234",
+        "firstName": "Firefox",
+        "lastName": "Playwright",
+        "company": "Automation FC",
+        "gender": "Male"
+    }
+}

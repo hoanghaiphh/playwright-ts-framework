@@ -1,15 +1,15 @@
 import { createLogger, format, transports, Logger } from 'winston';
-import 'winston-daily-rotate-file'; // register 'DailyRotateFile' to transports
+import 'winston-daily-rotate-file';
 
-const { combine, timestamp, label, printf, colorize } = format;
+const { combine, timestamp, printf, colorize } = format;
 const DailyRotateFile = (transports as any).DailyRotateFile;
 
 let currentRunID: string = '';
-let currentTestTitle: string = '';
+let currentLogContext: string = '';
 
-const logFormat = printf(({ level, message, label, timestamp }) => {
-    const finalLabel = currentTestTitle ? `${label} | ${currentTestTitle}` : label;
-    return `${timestamp} [${finalLabel}] ${level}: ${message}`;
+const logFormat = printf(({ level, message, timestamp, ...meta }) => {
+    const contextPart = meta.context ? ` [${meta.context}]` : '';
+    return `${timestamp}${contextPart} ${level}: ${message}`;
 });
 
 const combinedRotateTransport = new DailyRotateFile({
@@ -31,7 +31,6 @@ const errorRotateTransport = new DailyRotateFile({
 const logger: Logger = createLogger({
     level: 'debug',
     format: combine(
-        label({ label: 'TESTING' }),
         timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         logFormat
     ),
@@ -44,25 +43,23 @@ const logger: Logger = createLogger({
 
 export function initializeRunLogger(testInfo: any): void {
     const now = new Date();
-    const timeStamp = now.toLocaleString('sv-SE').replace(/-/g, '').replace(/:/g, '').replace(/ /g, '_');
+    const timeStamp = now.toLocaleString('sv-SE').replace(/-/g, '').replace(/:/g, '').replace(/\s/g, '-');
 
-    const browserName = testInfo.project.name.toLowerCase().replace(/\s/g, '_');
-    const specName = testInfo.file.split(/[\\/]/).pop()!.replace('.spec.ts', '').replace(/\s/g, '_');
+    const browserName = testInfo.project.name.toLowerCase().replace(/\s/g, '-');
+    const specName = testInfo.file.split(/[\\/]/).pop()!.replace('.spec.ts', '').replace(/\s/g, '-');
 
-    const runID = `${timeStamp}_${specName}_${browserName}`;
+    const runID = `${specName}_${timeStamp}_${browserName}`;
 
     if (!require('fs').existsSync('logs/runs')) {
         require('fs').mkdirSync('logs/runs', { recursive: true });
     }
 
+    currentLogContext = testInfo.titlePath[1].toUpperCase();
+    logger.defaultMeta = { context: currentLogContext };
+
     const runLogTransport = new transports.File({
         filename: `logs/runs/${runID}.log`,
         level: 'debug',
-        format: combine(
-            label({ label: browserName.toUpperCase() }),
-            timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-            logFormat
-        ),
     });
 
     logger.add(runLogTransport);
@@ -78,11 +75,15 @@ export function cleanupRunLogger(): void {
             logger.remove(transportToRemove);
             currentRunID = '';
         }
+
+        logger.defaultMeta = {};
     }
 }
 
 export function setCurrentTestTitle(title: string): void {
-    currentTestTitle = title;
+    logger.defaultMeta = {
+        context: title
+    };
 }
 
 export default logger;

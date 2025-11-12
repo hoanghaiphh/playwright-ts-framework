@@ -13,24 +13,45 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@data-access/*": [
-        "data-access/*"
+      "@BasePage": [
+        "pages/BasePage.ts"
       ],
-      "@factories/*": [
-        "factories/*"
+      "@nopcommerce-admin/*": [
+        "pages/nopcommerce-admin/*"
       ],
-      "@pages/*": [
-        "pages/*"
+      "@nopcommerce-user/*": [
+        "pages/nopcommerce-user/*"
       ],
-      "@services/*": [
-        "services/*"
+      "@test-data/*": [
+        "tests/data/*"
       ],
-      "@tests/*": [
-        "tests/*"
+      "@test-helpers/*": [
+        "tests/helpers/*"
+      ],
+      "@base-test": [
+        "tests/helpers/base-test.ts"
+      ],
+      "@custom-expect": [
+        "tests/helpers/custom-expect.ts"
       ],
       "@utils/*": [
         "utils/*"
-      ]
+      ],
+      "@apis/*": [
+        "utils/apis/*"
+      ],
+      "@factories/*": [
+        "utils/factories/*"
+      ],
+      "@repos/*": [
+        "utils/repositories/*"
+      ],
+      "@services/*": [
+        "utils/services/*"
+      ],
+      "@env": [
+        "env.config.ts"
+      ],
     },
     "types": [
       "node",
@@ -38,10 +59,7 @@
     ]
   },
   "include": [
-    "data-access",
-    "factories",
     "pages",
-    "services",
     "tests",
     "utils",
     "playwright.config.ts",

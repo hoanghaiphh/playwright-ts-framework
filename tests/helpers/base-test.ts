@@ -1,81 +1,14 @@
-import { test as base, Browser, Page, TestInfo } from '@playwright/test';
-import { BasePage } from '@pages/base/BasePage';
-import { Header } from '@pages/nopcommerce-user/components/Header';
+import { Browser, BrowserContext, Page, TestInfo } from '@playwright/test';
+import { BasePage } from '@BasePage';
 import sqlServiceInstance from '@services/sql-server.service';
 import logger, { initializeRunLogger, cleanupRunLogger, setCurrentTestTitle } from '@utils/logger';
+import { apiLogin } from '@utils/apis/nopcommerce.api';
 import * as allure from 'allure-js-commons';
 import { Severity } from 'allure-js-commons';
 export { Severity };
 
 const pomCache = new Map<(new (page: Page) => BasePage), BasePage>();
-
 let pageInstance: Page | undefined = undefined;
-
-type PageClassArray = Array<new (page: Page) => BasePage>;
-
-type CommonFixtures = {
-    header: Header;
-}
-
-export const test = base.extend<CommonFixtures>({
-    header: async ({ }, use) => {
-        const headerInstance = getPage(Header);
-        await use(headerInstance);
-    },
-})
-
-export async function setupSuite({ browser, baseURL }: { browser: Browser, baseURL: string | undefined },
-    testInfo: TestInfo, componentsToInitialize: PageClassArray = []): Promise<void> {
-
-    if (!baseURL) {
-        throw new Error("Fatal Error: 'baseURL' is undefined.");
-    }
-
-    const startLog =
-        `Starting Test Suite: ${testInfo.titlePath[1].toUpperCase()} | Browser: ${testInfo.project.name.toUpperCase()}`;
-    const startLogBorder = '='.repeat(startLog.length);
-    initializeRunLogger(testInfo);
-    logger.info(startLogBorder);
-    logger.info(startLog);
-    logger.info(startLogBorder + `\n`);
-
-    const page = await browser.newPage();
-    await page.goto(baseURL);
-    pageInstance = page;
-    pomCache.clear();
-
-    for (const ComponentClass of componentsToInitialize) {
-        getPage(ComponentClass);
-    }
-}
-
-export async function teardownSuite(): Promise<void> {
-    setCurrentTestTitle('');
-    logger.info('***');
-
-    if (pageInstance) {
-        await pageInstance.close();
-        pageInstance = undefined;
-        pomCache.clear();
-    }
-
-    await sqlServiceInstance.disconnect();
-
-    logger.info(`Test execution completed successfully.\n`);
-    cleanupRunLogger();
-}
-
-export function initializeTest(
-    feature: string, story: string, severity: Severity = Severity.NORMAL, description?: string): void {
-
-    allure.feature(feature);
-    allure.story(story);
-    allure.severity(severity);
-    if (description) allure.description(description);
-
-    setCurrentTestTitle(story);
-    logger.info('*');
-}
 
 export function getPage<T extends BasePage>(PageClass: new (page: Page) => T): T {
     if (!pageInstance) {
@@ -89,4 +22,82 @@ export function getPage<T extends BasePage>(PageClass: new (page: Page) => T): T
         pomCache.set(PageClass, instance);
         return instance;
     }
+}
+
+async function createBrowserContext(browser: Browser, baseURL: string,
+    credentials?: { email: string, password: string }): Promise<BrowserContext> {
+
+    if (credentials) {
+        logger.info(`Login required. Attempting API login...`);
+
+        try {
+            const storageState = await apiLogin(credentials.email, credentials.password);
+            const context = await browser.newContext({ storageState: storageState, baseURL: baseURL });
+            logger.info(`Context created with authenticated state.`);
+            return context;
+        } catch (error) {
+            logger.error(error);
+            throw error;
+        }
+    } else {
+        return browser.newContext({ baseURL: baseURL });
+    }
+}
+
+export async function setupSuite({ browser, baseURL }: { browser: Browser, baseURL: string | undefined },
+    testInfo: TestInfo, credentials?: { email: string, password: string }): Promise<void> {
+
+    if (!baseURL) throw new Error("Fatal Error: 'baseURL' is undefined.");
+
+    const startLog =
+        `Starting Test Suite: ${testInfo.titlePath[1].toUpperCase()} | Browser: ${testInfo.project.name.toUpperCase()}`;
+    const startLogBorder = '='.repeat(startLog.length);
+
+    initializeRunLogger(testInfo);
+    logger.info(startLogBorder);
+    logger.info(startLog);
+    logger.info(startLogBorder + `\n`);
+    setCurrentTestTitle('setup');
+
+    const context = await createBrowserContext(browser, baseURL, credentials);
+    const page = await context.newPage();
+    await page.goto('/');
+    pageInstance = page;
+    pomCache.clear();
+}
+
+export async function teardownSuite(): Promise<void> {
+
+    setCurrentTestTitle('teardown');
+    logger.info('***');
+
+    if (pageInstance) {
+        const context = pageInstance.context();
+        await pageInstance.close();
+        await context.close();
+        pageInstance = undefined;
+        pomCache.clear();
+    }
+
+    await sqlServiceInstance.disconnect();
+
+    logger.info(`Test execution completed successfully.\n`);
+    cleanupRunLogger();
+}
+
+export function initializeTest(testInfo: TestInfo, severity: Severity = Severity.NORMAL, description?: string): void {
+
+    const fullPath = testInfo.file;
+    const pathParts = fullPath.split(/[\/\\]/);
+    const folderName = pathParts[pathParts.length - 2];
+    const fileNameWithExtension = pathParts[pathParts.length - 1];
+    const fileName = fileNameWithExtension.replace('.spec.ts', '');
+
+    allure.feature(folderName.toUpperCase().replace(/-/g, ' ')); // upper
+    allure.story(fileName.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')); // pascal
+    allure.severity(severity);
+    if (description) allure.description(description);
+
+    setCurrentTestTitle(testInfo.title);
+    logger.info('***');
 }
