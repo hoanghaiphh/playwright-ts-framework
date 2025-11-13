@@ -20,7 +20,7 @@ async function getCsrfToken(apiContext: APIRequestContext, endpoint: string): Pr
     return tokenMatch[1];
 }
 
-async function performApiLogin(email: string, password: string): Promise<any> {
+export async function apiLogin(email: string, password: string): Promise<any> {
 
     const apiContext = await request.newContext({
         baseURL: UI_BASE_URL,
@@ -52,7 +52,7 @@ async function performApiLogin(email: string, password: string): Promise<any> {
     }
 }
 
-export async function apiLogin(email: string, password: string): Promise<any> {
+export async function prepareAuthentication(email: string, password: string): Promise<any> {
 
     const stateDir = path.join(process.cwd(), 'playwright-cache');
     const stateFileName = `${email}.json`.replace('@', '.');
@@ -77,7 +77,7 @@ export async function apiLogin(email: string, password: string): Promise<any> {
         logger.info(`No cache file found for ${email}. Performing API login...`);
     }
 
-    const finalStorageState = await performApiLogin(email, password);
+    const finalStorageState = await apiLogin(email, password);
 
     fs.writeFileSync(statePath, JSON.stringify(finalStorageState));
     logger.info(`Login success for ${email}. New state file created in 'playwright-cache/'`);

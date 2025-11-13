@@ -60,6 +60,7 @@
   },
   "include": [
     "pages",
+    "scripts",
     "tests",
     "utils",
     "playwright.config.ts",

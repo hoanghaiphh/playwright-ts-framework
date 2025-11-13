@@ -2,7 +2,7 @@ import { Browser, BrowserContext, Page, TestInfo } from '@playwright/test';
 import { BasePage } from '@BasePage';
 import sqlServiceInstance from '@services/sql-server.service';
 import logger, { initializeRunLogger, cleanupRunLogger, setCurrentTestTitle } from '@utils/logger';
-import { apiLogin } from '@utils/apis/nopcommerce.api';
+import { prepareAuthentication } from '@utils/apis/nopcommerce.api';
 import * as allure from 'allure-js-commons';
 import { Severity } from 'allure-js-commons';
 export { Severity };
@@ -31,7 +31,7 @@ async function createBrowserContext(browser: Browser, baseURL: string,
         logger.info(`Login required. Attempting API login...`);
 
         try {
-            const storageState = await apiLogin(credentials.email, credentials.password);
+            const storageState = await prepareAuthentication(credentials.email, credentials.password);
             const context = await browser.newContext({ storageState: storageState, baseURL: baseURL });
             logger.info(`Context created with authenticated state.`);
             return context;

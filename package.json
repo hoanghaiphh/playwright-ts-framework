@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc --noEmit",
+    "script:debug": "ts-node -r tsconfig-paths/register",
     "log:clean": "rimraf logs",
     "log:clean:combined": "rimraf logs/combined",
     "log:clean:error": "rimraf logs/error",
@@ -15,7 +16,7 @@
     "test:run:firefox": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --project=firefox",
     "test:run:chrome": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --project=chrome",
     "test:run:edge": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --project=edge",
-    "allure:serve": "ts-node utils/write-allure-env.ts ; allure serve allure-results"
+    "allure:serve": "ts-node scripts/write-allure-env.ts ; allure serve allure-results"
   },
   "keywords": [],
   "author": "",
@@ -25,14 +26,16 @@
     "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.56.1",
     "@types/exceljs": "^0.5.3",
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.10.1",
     "@types/winston": "^2.4.4",
     "allure-commandline": "^2.34.1",
     "allure-js-commons": "^3.4.2",
     "allure-playwright": "^3.4.2",
     "cross-env": "^10.1.0",
     "rimraf": "^6.1.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@types/mssql": "^9.1.8",
