@@ -19,24 +19,24 @@ export default defineConfig({
 
   use: {
     baseURL: currentConfig.appUrl,
-    headless: isCI,
+    headless: true,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure'
   },
 
   projects: [
-    { name: 'edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
-    { name: 'chrome', use: { ...devices['Desktop Chrome'], channel: 'chrome' } },
+    // { name: 'chrome', use: { ...devices['Desktop Chrome'], channel: 'chrome' } },
+    // { name: 'edge', use: { ...devices['Desktop Edge'], channel: 'msedge' } },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
     { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    // { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    // { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
   ],
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  /* webServer: {
+    command: 'npm run start',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  }, */
 });

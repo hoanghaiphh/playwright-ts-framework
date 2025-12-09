@@ -15,10 +15,26 @@
         "company": "Automation FC",
         "gender": "Male"
     },
+    "chromium": {
+        "email": "playwright.chromium@nopcommerce.com",
+        "password": "Abcd@1234",
+        "firstName": "Chromium",
+        "lastName": "Playwright",
+        "company": "Automation FC",
+        "gender": "Male"
+    },
     "firefox": {
         "email": "playwright.firefox@nopcommerce.com",
         "password": "Abcd@1234",
         "firstName": "Firefox",
+        "lastName": "Playwright",
+        "company": "Automation FC",
+        "gender": "Male"
+    },
+    "webkit": {
+        "email": "playwright.webkit@nopcommerce.com",
+        "password": "Abcd@1234",
+        "firstName": "Webkit",
         "lastName": "Playwright",
         "company": "Automation FC",
         "gender": "Male"
