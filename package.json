@@ -11,11 +11,11 @@
     "log:clean:runs": "rimraf logs/runs",
     "report:clean": "rimraf allure-results playwright-report",
     "test:prepare": "npm run log:clean:runs ; npm run report:clean",
-    "test:run": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test",
+    "test:run": "npm run test:prepare ; distrobox enter ubt-box -- cross-env TEST_ENV=$env playwright test",
     "test:run:oneworker": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --workers=1",
     "test:run:chromium": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --project=chromium",
     "test:run:firefox": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --project=firefox",
-    "test:run:webkit": "npm run test:prepare ; cross-env TEST_ENV=$env playwright test --project=webkit",
+    "test:run:webkit": "npm run test:prepare ; distrobox enter ubt-box -- cross-env TEST_ENV=$env playwright test --project=webkit",
     "allure:serve": "ts-node scripts/write-allure-env.ts ; allure serve allure-results"
   },
   "keywords": [],
